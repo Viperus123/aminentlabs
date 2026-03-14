@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Partner Program — AMINENT LABS</title>
+  <meta name="description" content="Join the AMINENT LABS affiliate partner program. Earn commission promoting research-grade peptides.">
+  <link rel="icon" type="image/png" href="favicon/newfavicon.png">
+  <meta property="og:title" content="Partner Program — AMINENT LABS">
+  <meta property="og:description" content="Join the AMINENT LABS affiliate partner program. Earn commission promoting research-grade peptides.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://aminentlabs.com/partners.html">
+  <meta name="twitter:card" content="summary">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* --- Commission Banner --- */
+    .commission-banner {
+      background: linear-gradient(135deg, #0A192F 0%, #1a365d 100%);
+      border-radius: 12px;
+      padding: 3rem 2.5rem;
+      text-align: center;
+      color: #fff;
+      position: relative;
+      overflow: hidden;
+    }
+    .commission-banner::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 30% 50%, rgba(59, 130, 246, 0.15), transparent 60%);
+      pointer-events: none;
+    }
+    .commission-banner .commission-number {
+      font-size: 4rem;
+      font-weight: 700;
+      line-height: 1;
+      letter-spacing: -0.02em;
+    }
+    .commission-banner .commission-label {
+      font-size: 1.15rem;
+      font-weight: 500;
+      margin-top: 0.5rem;
+      color: rgba(255, 255, 255, 0.9);
+    }
+    .commission-banner .commission-sub {
+      font-size: 0.9rem;
+      color: rgba(255, 255, 255, 0.6);
+      margin-top: 0.5rem;
+    }
+
+    /* --- Steps --- */
+    .partner-steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0;
+      counter-reset: step;
+      position: relative;
+    }
+    .partner-step {
+      position: relative;
+      padding: 2rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      counter-increment: step;
+      transition: all var(--transition);
+      background: var(--bg);
+    }
+    .partner-step:hover {
+      box-shadow: var(--card-hover);
+      transform: translateY(-2px);
+    }
+    .partner-step::before {
+      content: counter(step);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      background: var(--accent);
+      color: #fff;
+      border-radius: 50%;
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 1.25rem;
+    }
+    .partner-step:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      top: 2rem;
+      right: -1.25rem;
+      width: 2.5rem;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), var(--border));
+      z-index: 1;
+      transform: translateY(18px);
+    }
+    .partner-step h4 {
+      margin-bottom: 0.5rem;
+    }
+    .partner-step p {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    /* --- Benefits --- */
+    .partner-highlights {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+    }
+    .partner-highlight {
+      display: flex;
+      gap: 1.25rem;
+      align-items: flex-start;
+      padding: 2rem;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      transition: all var(--transition);
+    }
+    .partner-highlight:hover {
+      box-shadow: var(--card-hover);
+      transform: translateY(-2px);
+    }
+    .partner-highlight-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      background: rgba(59, 130, 246, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .partner-highlight-icon svg {
+      width: 22px;
+      height: 22px;
+      stroke: var(--accent);
+      stroke-width: 1.5;
+      fill: none;
+    }
+    .partner-highlight h4 {
+      font-size: 0.95rem;
+      margin-bottom: 0.35rem;
+    }
+    .partner-highlight p {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      line-height: 1.55;
+      margin: 0;
+    }
+
+    /* --- Form Card --- */
+    .partner-form-card {
+      max-width: 600px;
+      margin: 0 auto;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2.5rem;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
+    }
+    .partner-form {
+      display: grid;
+      gap: 1.25rem;
+    }
+    .partner-form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+    }
+    .partner-form label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      margin-bottom: 0.4rem;
+    }
+    .partner-form input,
+    .partner-form select,
+    .partner-form textarea {
+      width: 100%;
+      padding: 0.8rem 1rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 0.9rem;
+      color: var(--text);
+      background: var(--bg-alt);
+      transition: all var(--transition);
+    }
+    .partner-form input:focus,
+    .partner-form select:focus,
+    .partner-form textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+      background: var(--bg);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+    .partner-form textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+    .partner-form .btn {
+      width: 100%;
+      justify-content: center;
+      text-align: center;
+      padding: 1rem;
+    }
+    .partner-form-success {
+      display: none;
+      text-align: center;
+      padding: 2.5rem;
+      background: #E8F5E9;
+      border-radius: 12px;
+      color: #2E7D32;
+      font-weight: 500;
+    }
+
+    @media (max-width: 768px) {
+      .partner-steps {
+        grid-template-columns: 1fr;
+        gap: 1.25rem;
+      }
+      .partner-step:not(:last-child)::after {
+        display: none;
+      }
+      .partner-highlights {
+        grid-template-columns: 1fr;
+      }
+      .partner-form-row {
+        grid-template-columns: 1fr;
+      }
+      .partner-form-card {
+        padding: 1.5rem;
+      }
+      .commission-banner {
+        padding: 2rem 1.5rem;
+      }
+      .commission-banner .commission-number {
+        font-size: 3rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Announcement Bar -->
+  <div class="announcement-bar">Free shipping on orders over $150 &nbsp;·&nbsp; COA available for all peptides &nbsp;·&nbsp; For Research Use Only</div>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="index.html" class="nav-logo">
+        <img src="newaminologo.png" alt="AMINENT LABS">
+      </a>
+      <div class="nav-links" id="navLinks">
+        <a href="products.html">Products</a>
+        <a href="coa.html">COA</a>
+        <a href="about.html">About</a>
+        <a href="faq.html">FAQ</a>
+        <a href="contact.html">Contact</a>
+        <a href="partners.html">Partners</a>
+        <button class="theme-toggle" aria-label="Toggle theme">
+          <svg class="icon-moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+          <svg class="icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        </button>
+        <a href="login.html" class="nav-account-link" aria-label="Account">
+          <svg style="width:20px;height:20px;stroke:currentColor;stroke-width:1.5;fill:none;" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </a>
+        <a href="#" class="cart-badge" aria-label="Cart">
+          <svg style="width:20px;height:20px;stroke:currentColor;stroke-width:1.5;fill:none;" viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>
+          <span class="cart-badge-count" style="display:none;">0</span>
+        </a>
+      </div>
+      <button class="nav-mobile-toggle" id="navToggle" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="container">
+      <span class="label">Affiliate Program</span>
+      <h1>Partner With Us</h1>
+      <p>Earn commission by referring researchers and labs to AMINENT LABS. Share quality peptides with your audience and get rewarded for every sale.</p>
+      <a href="#apply" class="btn btn-primary btn-arrow" style="margin-top:1.5rem;">Apply Now</a>
+    </div>
+  </div>
+
+  <!-- Commission Banner -->
+  <section class="section" style="padding-bottom:0;">
+    <div class="container">
+      <div class="commission-banner fade-in">
+        <div class="commission-number">20%</div>
+        <div class="commission-label">Commission on Every Sale</div>
+        <p class="commission-sub">Earn 20% of every order placed through your unique referral link. No caps, no limits.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section class="section">
+    <div class="container">
+      <div class="section-header text-center">
+        <span class="label">How It Works</span>
+        <h2>Three Simple Steps</h2>
+        <p>Getting started as a partner takes just a few minutes.</p>
+      </div>
+      <div class="partner-steps" style="gap:2.5rem;">
+        <div class="partner-step fade-in">
+          <h4>Apply</h4>
+          <p>Fill out the application below. We review every submission and respond within 48 hours.</p>
+        </div>
+        <div class="partner-step fade-in">
+          <h4>Share</h4>
+          <p>Get your unique referral link and share it with your audience through your website, social media, or content.</p>
+        </div>
+        <div class="partner-step fade-in">
+          <h4>Earn</h4>
+          <p>Earn 20% on every qualifying sale made through your referral link. Paid out monthly.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Who It's For -->
+  <section class="section section-alt">
+    <div class="container">
+      <div class="section-header text-center">
+        <span class="label">Who It's For</span>
+        <h2>Built for These Partners</h2>
+      </div>
+      <div class="grid-3">
+        <div class="feature-card fade-in" style="background:var(--bg);">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
+          </div>
+          <h4>Content Creators</h4>
+          <p>YouTubers, bloggers, and podcasters covering health, fitness, or biohacking topics.</p>
+        </div>
+        <div class="feature-card fade-in" style="background:var(--bg);">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+          </div>
+          <h4>Fitness & Wellness</h4>
+          <p>Coaches, trainers, and wellness professionals with an engaged audience interested in research peptides.</p>
+        </div>
+        <div class="feature-card fade-in" style="background:var(--bg);">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+          </div>
+          <h4>Researchers & Educators</h4>
+          <p>Scientists, lab managers, and educators who can recommend verified peptide sources to their network.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Program Benefits -->
+  <section class="section">
+    <div class="container">
+      <div class="section-header text-center">
+        <span class="label">Benefits</span>
+        <h2>Why Partner With AMINENT LABS</h2>
+      </div>
+      <div class="partner-highlights">
+        <div class="partner-highlight fade-in">
+          <div class="partner-highlight-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+          </div>
+          <div>
+            <h4>20% Commission</h4>
+            <p>Earn 20% on every sale you refer. Straightforward, no tiers or hidden conditions.</p>
+          </div>
+        </div>
+        <div class="partner-highlight fade-in">
+          <div class="partner-highlight-icon">
+            <svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+          </div>
+          <div>
+            <h4>Real-Time Tracking</h4>
+            <p>Monitor clicks, conversions, and earnings through your partner dashboard.</p>
+          </div>
+        </div>
+        <div class="partner-highlight fade-in">
+          <div class="partner-highlight-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <div>
+            <h4>Trusted Products</h4>
+            <p>Promote peptides backed by third-party testing, COAs, and verified purity above 98%.</p>
+          </div>
+        </div>
+        <div class="partner-highlight fade-in">
+          <div class="partner-highlight-icon">
+            <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+          </div>
+          <div>
+            <h4>Dedicated Support</h4>
+            <p>Get a dedicated partner manager to help optimize your campaigns and maximize conversions.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Application Form -->
+  <section class="section" id="apply">
+    <div class="container">
+      <div class="section-header text-center">
+        <span class="label">Get Started</span>
+        <h2>Apply Now</h2>
+        <p>Tell us about yourself and how you plan to promote AMINENT LABS.</p>
+      </div>
+      <div class="partner-form-card">
+        <div class="partner-form-success" id="partnerSuccess">
+          Application submitted! We'll review it and get back to you within 48 hours.
+        </div>
+        <form class="partner-form" id="partnerForm" onsubmit="submitPartnerForm(event)">
+          <div class="partner-form-row">
+            <div>
+              <label for="partnerFirstName">First Name</label>
+              <input type="text" id="partnerFirstName" name="firstName" required>
+            </div>
+            <div>
+              <label for="partnerLastName">Last Name</label>
+              <input type="text" id="partnerLastName" name="lastName" required>
+            </div>
+          </div>
+          <div>
+            <label for="partnerEmail">Email</label>
+            <input type="email" id="partnerEmail" name="email" required>
+          </div>
+          <div>
+            <label for="partnerWebsite">Website or Social Media URL</label>
+            <input type="url" id="partnerWebsite" name="website" placeholder="https://">
+          </div>
+          <div>
+            <label for="partnerAudience">Audience Type</label>
+            <select id="partnerAudience" name="audience" required>
+              <option value="" disabled selected>Select one</option>
+              <option value="researcher">Researcher / Scientist</option>
+              <option value="content-creator">Content Creator</option>
+              <option value="fitness">Fitness / Wellness</option>
+              <option value="retailer">Retailer / Reseller</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div>
+            <label for="partnerMessage">How do you plan to promote AMINENT LABS?</label>
+            <textarea id="partnerMessage" name="message" placeholder="Tell us about your platform and audience..."></textarea>
+          </div>
+          <input type="hidden" name="_subject" value="New Partner Application">
+          <button type="submit" class="btn btn-primary" id="partnerSubmitBtn">Submit Application</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section">
+    <div class="container">
+      <h2>Questions about the program?</h2>
+      <p>Reach out and we'll walk you through everything you need to know.</p>
+      <a href="contact.html" class="btn btn-white btn-arrow">Contact Us</a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="footer-logo-text">
+            <span class="footer-logo-primary">AMINENT</span>
+            <span class="footer-logo-sub">LABS</span>
+          </div>
+          <p>Advanced research peptides manufactured under strict laboratory conditions and verified by independent testing.</p>
+          <div class="footer-newsletter">
+            <p>Subscribe for updates on new peptides and research.</p>
+            <form class="newsletter-form" onsubmit="handleNewsletter(event)">
+              <input type="email" placeholder="Enter your email" required>
+              <button type="submit">Subscribe</button>
+            </form>
+          </div>
+        </div>
+        <div>
+          <h5>Products</h5>
+          <ul>
+            <li><a href="products.html">All Peptides</a></li>
+            <li><a href="product-glp3rt.html">GLP-3 RT</a></li>
+            <li><a href="product-bpc157.html">BPC-157</a></li>
+            <li><a href="product-ghkcu.html">GHK-Cu</a></li>
+          </ul>
+        </div>
+        <div>
+          <h5>Company</h5>
+          <ul>
+            <li><a href="about.html">About</a></li>
+            <li><a href="coa.html">Certificates of Analysis</a></li>
+            <li><a href="faq.html">FAQ</a></li>
+            <li><a href="contact.html">Contact</a></li>
+            <li><a href="partners.html">Partners</a></li>
+          </ul>
+        </div>
+        <div>
+          <h5>Legal</h5>
+          <ul>
+            <li><a href="compliance.html">Compliance</a></li>
+            <li><a href="terms.html">Terms of Service</a></li>
+            <li><a href="privacy.html">Privacy Policy</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-ruo-banner">
+        <svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        <div>
+          <strong>Research Use Only</strong>
+          <span>Not for human consumption. All products are intended solely for in vitro research and laboratory use.</span>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2026 AMINENT LABS. All rights reserved.</span>
+        <span>aminentlabs.com</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Back to Top -->
+  <button class="back-to-top" id="backToTop" aria-label="Back to top">
+    <svg viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"/></svg>
+  </button>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="supabase-config.js"></script>
+  <script src="auth.js"></script>
+  <script src="app.js"></script>
+  <script>
+    function submitPartnerForm(e) {
+      e.preventDefault();
+      var form = e.target;
+      var btn = document.getElementById('partnerSubmitBtn');
+      btn.disabled = true;
+      btn.textContent = 'Submitting...';
+
+      var formData = new FormData(form);
+
+      fetch('https://formsubmit.co/ajax/support@aminentlabs.com', {
+        method: 'POST',
+        headers: { 'Accept': 'application/json' },
+        body: formData
+      })
+      .then(function(response) {
+        if (response.ok) {
+          form.style.display = 'none';
+          document.getElementById('partnerSuccess').style.display = 'block';
+        } else {
+          alert('Something went wrong. Please email support@aminentlabs.com directly.');
+        }
+      })
+      .catch(function() {
+        alert('Something went wrong. Please email support@aminentlabs.com directly.');
+      })
+      .finally(function() {
+        btn.disabled = false;
+        btn.textContent = 'Submit Application';
+      });
+    }
+  </script>
+
+</body>
+</html>

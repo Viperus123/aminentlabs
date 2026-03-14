@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin — AMINENT LABS</title>
+  <link rel="icon" type="image/png" href="favicon/newfavicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="index.html" class="nav-logo">
+        <img src="newaminologo.png" alt="AMINENT LABS">
+      </a>
+      <div class="nav-links" id="navLinks">
+        <a href="products.html">Products</a>
+        <a href="account.html">My Account</a>
+        <button class="theme-toggle" aria-label="Toggle theme">
+          <svg class="icon-moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+          <svg class="icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        </button>
+      </div>
+      <button class="nav-mobile-toggle" id="navToggle" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <section class="section" style="padding-top:6rem;">
+    <div class="container">
+
+      <!-- Admin Header -->
+      <div class="admin-header fade-in">
+        <div>
+          <h1>Admin Panel</h1>
+          <p id="adminUserInfo" style="color:var(--text-secondary);font-size:0.9rem;"></p>
+        </div>
+        <div class="admin-stats" id="adminStats"></div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="account-tabs fade-in">
+        <button class="account-tab active" data-tab="panelAllOrders">
+          <svg viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg>
+          All Orders
+        </button>
+        <button class="account-tab" data-tab="panelCustomers">
+          <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+          Customers
+        </button>
+      </div>
+
+      <!-- All Orders Panel -->
+      <div class="account-panel active" id="panelAllOrders">
+        <!-- Filters -->
+        <div class="admin-filters fade-in">
+          <select id="orderStatusFilter" onchange="filterAdminOrders()">
+            <option value="all">All Statuses</option>
+            <option value="Processing">Processing</option>
+            <option value="Shipped">Shipped</option>
+            <option value="Delivered">Delivered</option>
+            <option value="Cancelled">Cancelled</option>
+          </select>
+          <input type="text" id="orderSearchInput" placeholder="Search by order ID or email..." oninput="filterAdminOrders()">
+        </div>
+        <div id="adminOrdersList">
+          <div class="account-loading">Loading orders...</div>
+        </div>
+      </div>
+
+      <!-- Customers Panel -->
+      <div class="account-panel" id="panelCustomers">
+        <div id="adminCustomersList">
+          <div class="account-loading">Loading customers...</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Order Edit Modal -->
+  <div class="modal-overlay" id="orderModal">
+    <div class="modal-card" style="max-width:600px;">
+      <div class="modal-header">
+        <h3 id="orderModalTitle">Edit Order</h3>
+        <button class="modal-close" onclick="closeOrderModal()">
+          <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <form id="orderEditForm" onsubmit="saveOrderUpdate(event)">
+        <input type="hidden" name="orderId" id="editOrderId">
+        <div class="form-group">
+          <label>Order Status</label>
+          <select id="editOrderStatus" name="status" style="width:100%;padding:0.7rem;border:1px solid var(--border);border-radius:var(--radius);font-family:inherit;font-size:0.9rem;background:var(--bg);color:var(--text);">
+            <option value="Processing">Processing</option>
+            <option value="Shipped">Shipped</option>
+            <option value="Delivered">Delivered</option>
+            <option value="Cancelled">Cancelled</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Tracking Number</label>
+          <input type="text" id="editTrackingNumber" name="tracking_number" placeholder="e.g. 9400111899223100000000">
+        </div>
+        <div class="form-group">
+          <label>Carrier</label>
+          <select id="editTrackingCarrier" name="tracking_carrier" style="width:100%;padding:0.7rem;border:1px solid var(--border);border-radius:var(--radius);font-family:inherit;font-size:0.9rem;background:var(--bg);color:var(--text);">
+            <option value="USPS">USPS</option>
+            <option value="UPS">UPS</option>
+            <option value="FedEx">FedEx</option>
+            <option value="DHL">DHL</option>
+          </select>
+        </div>
+        <div id="orderModalInfo" style="margin-bottom:1rem;"></div>
+        <div style="display:flex;gap:0.75rem;">
+          <button type="submit" class="btn btn-primary" style="flex:1;justify-content:center;">Save Changes</button>
+          <button type="button" class="btn btn-outline" onclick="closeOrderModal()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="supabase-config.js"></script>
+  <script src="auth.js"></script>
+  <script src="app.js"></script>
+
+  <script>
+    // ========================================
+    // Admin Configuration
+    // ========================================
+    // Add your admin email(s) here
+    var ADMIN_EMAILS = ['support@aminentlabs.com'];
+
+    var allOrders = [];
+
+    // ========================================
+    // Admin Auth Check
+    // ========================================
+    (async function() {
+      var session = await getSession();
+      if (!session) {
+        window.location.href = 'login.html';
+        return;
+      }
+
+      var user = session.user;
+      if (!ADMIN_EMAILS.includes(user.email)) {
+        document.querySelector('.container').innerHTML =
+          '<div style="text-align:center;padding:4rem 0;">' +
+          '<h2>Access Denied</h2>' +
+          '<p style="color:var(--text-secondary);margin-top:0.5rem;">You do not have admin privileges.</p>' +
+          '<a href="account.html" class="btn btn-primary" style="margin-top:1.5rem;">Go to My Account</a></div>';
+        return;
+      }
+
+      document.getElementById('adminUserInfo').textContent = 'Logged in as ' + user.email;
+
+      // Tab switching
+      document.querySelectorAll('.account-tab').forEach(function(tab) {
+        tab.addEventListener('click', function() {
+          document.querySelectorAll('.account-tab').forEach(function(t) { t.classList.remove('active'); });
+          document.querySelectorAll('.account-panel').forEach(function(p) { p.classList.remove('active'); });
+          this.classList.add('active');
+          document.getElementById(this.getAttribute('data-tab')).classList.add('active');
+        });
+      });
+
+      loadAdminOrders();
+      loadAdminCustomers();
+      loadAdminStats();
+    })();
+
+    // ========================================
+    // Load Stats
+    // ========================================
+    async function loadAdminStats() {
+      var { data: orders } = await supabase.from('orders').select('total, status');
+      if (!orders) return;
+
+      var totalRevenue = orders.reduce(function(s, o) { return s + (parseFloat(o.total) || 0); }, 0);
+      var processing = orders.filter(function(o) { return o.status === 'Processing'; }).length;
+      var shipped = orders.filter(function(o) { return o.status === 'Shipped'; }).length;
+
+      document.getElementById('adminStats').innerHTML =
+        '<div class="admin-stat"><span class="admin-stat-num">' + orders.length + '</span><span class="admin-stat-label">Total Orders</span></div>' +
+        '<div class="admin-stat"><span class="admin-stat-num">$' + totalRevenue.toFixed(2) + '</span><span class="admin-stat-label">Revenue</span></div>' +
+        '<div class="admin-stat"><span class="admin-stat-num">' + processing + '</span><span class="admin-stat-label">Processing</span></div>' +
+        '<div class="admin-stat"><span class="admin-stat-num">' + shipped + '</span><span class="admin-stat-label">Shipped</span></div>';
+    }
+
+    // ========================================
+    // Load All Orders (admin bypass RLS via service key not available, so we use a DB function)
+    // ========================================
+    async function loadAdminOrders() {
+      var container = document.getElementById('adminOrdersList');
+
+      var { data: orders, error } = await supabase
+        .from('orders')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        container.innerHTML = '<div class="account-empty"><p>Error loading orders: ' + error.message + '</p></div>';
+        return;
+      }
+
+      allOrders = orders || [];
+      renderAdminOrders(allOrders);
+    }
+
+    function renderAdminOrders(orders) {
+      var container = document.getElementById('adminOrdersList');
+
+      if (!orders || orders.length === 0) {
+        container.innerHTML = '<div class="account-empty"><p>No orders yet</p></div>';
+        return;
+      }
+
+      var html = '<div class="admin-orders-table"><table><thead><tr>' +
+        '<th>Order ID</th><th>Date</th><th>Customer</th><th>Items</th><th>Total</th><th>Status</th><th>Actions</th>' +
+        '</tr></thead><tbody>';
+
+      orders.forEach(function(order) {
+        var date = new Date(order.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        var itemCount = order.items ? order.items.reduce(function(s, i) { return s + (i.qty || 1); }, 0) : 0;
+        var statusClass = 'status-' + (order.status || 'processing').toLowerCase();
+        var addr = order.shipping_address || {};
+
+        html += '<tr>' +
+          '<td><strong>' + order.order_id + '</strong></td>' +
+          '<td>' + date + '</td>' +
+          '<td>' + (addr.name || order.email || '—') + '<br><span style="font-size:0.8rem;color:var(--text-light);">' + (order.email || '') + '</span></td>' +
+          '<td>' + itemCount + ' item' + (itemCount !== 1 ? 's' : '') + '</td>' +
+          '<td>$' + (parseFloat(order.total) || 0).toFixed(2) + '</td>' +
+          '<td><span class="order-status ' + statusClass + '">' + (order.status || 'Processing') + '</span></td>' +
+          '<td><button class="btn-text" onclick=\'openOrderModal(' + JSON.stringify(JSON.stringify(order)) + ')\'>Edit</button></td>' +
+          '</tr>';
+      });
+
+      html += '</tbody></table></div>';
+      container.innerHTML = html;
+    }
+
+    function filterAdminOrders() {
+      var status = document.getElementById('orderStatusFilter').value;
+      var search = document.getElementById('orderSearchInput').value.toLowerCase().trim();
+
+      var filtered = allOrders.filter(function(o) {
+        var matchStatus = status === 'all' || o.status === status;
+        var matchSearch = !search ||
+          (o.order_id || '').toLowerCase().includes(search) ||
+          (o.email || '').toLowerCase().includes(search);
+        return matchStatus && matchSearch;
+      });
+
+      renderAdminOrders(filtered);
+    }
+
+    // ========================================
+    // Order Edit Modal
+    // ========================================
+    function openOrderModal(orderJson) {
+      var order = JSON.parse(orderJson);
+      var modal = document.getElementById('orderModal');
+
+      document.getElementById('editOrderId').value = order.id;
+      document.getElementById('orderModalTitle').textContent = 'Edit ' + order.order_id;
+      document.getElementById('editOrderStatus').value = order.status || 'Processing';
+      document.getElementById('editTrackingNumber').value = order.tracking_number || '';
+      document.getElementById('editTrackingCarrier').value = order.tracking_carrier || 'USPS';
+
+      // Show order info
+      var addr = order.shipping_address || {};
+      var itemsHtml = '';
+      if (order.items && order.items.length) {
+        order.items.forEach(function(item) {
+          itemsHtml += '<div style="display:flex;justify-content:space-between;padding:0.2rem 0;font-size:0.85rem;">' +
+            '<span>' + item.name + ' x' + item.qty + '</span><span>$' + (item.price * item.qty).toFixed(2) + '</span></div>';
+        });
+      }
+
+      document.getElementById('orderModalInfo').innerHTML =
+        '<div style="background:var(--bg-alt);border-radius:var(--radius);padding:1rem;margin-top:0.5rem;">' +
+        '<div style="font-size:0.85rem;color:var(--text-secondary);margin-bottom:0.5rem;">' +
+        '<strong>Ship to:</strong> ' + (addr.name || '—') + ', ' + (addr.address || '—') + ', ' + (addr.city || '') + ' ' + (addr.state || '') + ' ' + (addr.zip || '') +
+        '</div>' + itemsHtml +
+        '<div style="border-top:1px solid var(--border);margin-top:0.5rem;padding-top:0.5rem;font-weight:500;display:flex;justify-content:space-between;">' +
+        '<span>Total</span><span>$' + (parseFloat(order.total) || 0).toFixed(2) + '</span></div></div>';
+
+      modal.classList.add('open');
+    }
+
+    function closeOrderModal() {
+      document.getElementById('orderModal').classList.remove('open');
+    }
+
+    async function saveOrderUpdate(e) {
+      e.preventDefault();
+      var id = document.getElementById('editOrderId').value;
+      var status = document.getElementById('editOrderStatus').value;
+      var tracking = document.getElementById('editTrackingNumber').value;
+      var carrier = document.getElementById('editTrackingCarrier').value;
+
+      var updateData = { status: status };
+      if (tracking) {
+        updateData.tracking_number = tracking;
+        updateData.tracking_carrier = carrier;
+      }
+
+      var { error } = await supabase.from('orders').update(updateData).eq('id', id);
+
+      if (error) {
+        alert('Error updating order: ' + error.message);
+        return;
+      }
+
+      closeOrderModal();
+      loadAdminOrders();
+      loadAdminStats();
+    }
+
+    // ========================================
+    // Customers List
+    // ========================================
+    async function loadAdminCustomers() {
+      var container = document.getElementById('adminCustomersList');
+
+      // Get unique customers from orders
+      var { data: orders } = await supabase.from('orders').select('email, user_id, total, created_at').order('created_at', { ascending: false });
+
+      if (!orders || orders.length === 0) {
+        container.innerHTML = '<div class="account-empty"><p>No customers yet</p></div>';
+        return;
+      }
+
+      // Group by email
+      var customers = {};
+      orders.forEach(function(o) {
+        var key = o.email || o.user_id;
+        if (!customers[key]) {
+          customers[key] = { email: o.email, orders: 0, totalSpent: 0, lastOrder: o.created_at };
+        }
+        customers[key].orders++;
+        customers[key].totalSpent += parseFloat(o.total) || 0;
+      });
+
+      var list = Object.values(customers).sort(function(a, b) { return b.totalSpent - a.totalSpent; });
+
+      var html = '<div class="admin-orders-table"><table><thead><tr>' +
+        '<th>Customer</th><th>Orders</th><th>Total Spent</th><th>Last Order</th>' +
+        '</tr></thead><tbody>';
+
+      list.forEach(function(c) {
+        var date = new Date(c.lastOrder).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        html += '<tr>' +
+          '<td>' + (c.email || '—') + '</td>' +
+          '<td>' + c.orders + '</td>' +
+          '<td>$' + c.totalSpent.toFixed(2) + '</td>' +
+          '<td>' + date + '</td>' +
+          '</tr>';
+      });
+
+      html += '</tbody></table></div>';
+      container.innerHTML = html;
+    }
+  </script>
+
+</body>
+</html>

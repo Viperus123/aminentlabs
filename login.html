@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In — AMINENT LABS</title>
+  <meta name="description" content="Sign in to your AMINENT LABS account to view orders, track shipments, and access member pricing.">
+  <link rel="icon" type="image/png" href="favicon/newfavicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Announcement Bar -->
+  <div class="announcement-bar">Free shipping on orders over $150 &nbsp;·&nbsp; COA available for all peptides &nbsp;·&nbsp; For Research Use Only</div>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="index.html" class="nav-logo">
+        <img src="newaminologo.png" alt="AMINENT LABS">
+      </a>
+      <div class="nav-links" id="navLinks">
+        <a href="products.html">Products</a>
+        <a href="coa.html">COA</a>
+        <a href="about.html">About</a>
+        <a href="faq.html">FAQ</a>
+        <a href="contact.html">Contact</a>
+        <a href="partners.html">Partners</a>
+        <button class="theme-toggle" aria-label="Toggle theme">
+          <svg class="icon-moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+          <svg class="icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        </button>
+        <a href="login.html" class="nav-account-link" aria-label="Account">
+          <svg style="width:20px;height:20px;stroke:currentColor;stroke-width:1.5;fill:none;" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </a>
+        <a href="#" class="cart-badge" aria-label="Cart">
+          <svg style="width:20px;height:20px;stroke:currentColor;stroke-width:1.5;fill:none;" viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>
+          <span class="cart-badge-count" style="display:none;">0</span>
+        </a>
+      </div>
+      <button class="nav-mobile-toggle" id="navToggle" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Split Auth Layout -->
+  <section class="auth-split">
+    <!-- Left Panel - Branding -->
+    <div class="auth-split-brand">
+      <div class="auth-split-brand-glow"></div>
+      <div class="auth-split-brand-content">
+        <img src="newaminologo.png" alt="AMINENT LABS" class="auth-split-logo">
+        <h2>Welcome Back</h2>
+        <p>Sign in to access your research account, track shipments, and enjoy member-exclusive pricing.</p>
+        <div class="auth-split-features">
+          <div class="auth-split-feature">
+            <svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>
+            <span>Exclusive discounts &amp; giveaways</span>
+          </div>
+          <div class="auth-split-feature">
+            <svg viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 3v5a2 2 0 01-2 2h-1"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+            <span>Real-time shipment tracking</span>
+          </div>
+          <div class="auth-split-feature">
+            <svg viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg>
+            <span>Full order history</span>
+          </div>
+          <div class="auth-split-feature">
+            <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <span>Saved addresses for fast checkout</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Panel - Form -->
+    <div class="auth-split-form">
+      <div class="auth-split-form-inner fade-in">
+        <h1>Sign In</h1>
+        <p class="auth-subtitle">Enter your credentials to continue</p>
+
+        <div class="auth-message" id="authMessage" style="display:none;"></div>
+
+        <form class="auth-form" id="loginForm" onsubmit="handleLogin(event)">
+          <div class="form-group">
+            <label for="loginEmail">Email Address</label>
+            <input type="email" id="loginEmail" name="email" required placeholder="you@example.com" autocomplete="email">
+          </div>
+          <div class="form-group">
+            <label for="loginPassword">Password</label>
+            <div class="password-input-wrap">
+              <input type="password" id="loginPassword" name="password" required placeholder="Enter your password" autocomplete="current-password" minlength="6">
+              <button type="button" class="password-toggle" onclick="togglePassword('loginPassword', this)" aria-label="Show password">
+                <svg class="eye-open" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                <svg class="eye-closed" viewBox="0 0 24 24" style="display:none;"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+              </button>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary auth-submit" id="loginBtn">Sign In</button>
+        </form>
+
+        <div class="auth-links">
+          <a href="#" onclick="showResetForm(event)">Forgot password?</a>
+          <span class="auth-divider">·</span>
+          <a href="signup.html">Create an account</a>
+        </div>
+
+        <!-- Reset Password Form (hidden by default) -->
+        <form class="auth-form" id="resetForm" style="display:none;" onsubmit="handleReset(event)">
+          <p style="margin-bottom:1rem;color:var(--text-secondary);font-size:0.9rem;">Enter your email and we'll send you a reset link.</p>
+          <div class="form-group">
+            <label for="resetEmail">Email Address</label>
+            <input type="email" id="resetEmail" name="email" required placeholder="you@example.com">
+          </div>
+          <button type="submit" class="btn btn-primary auth-submit">Send Reset Link</button>
+          <div class="auth-links" style="margin-top:1rem;">
+            <a href="#" onclick="showLoginForm(event)">Back to sign in</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- Minimal Footer -->
+  <div class="auth-footer">
+    <span>&copy; 2026 AMINENT LABS</span>
+    <span>·</span>
+    <a href="terms.html">Terms</a>
+    <span>·</span>
+    <a href="privacy.html">Privacy</a>
+    <span>·</span>
+    <span>For Research Use Only</span>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="supabase-config.js"></script>
+  <script src="auth.js"></script>
+  <script src="app.js"></script>
+
+  <script>
+    (async function() {
+      var session = await getSession();
+      if (session) window.location.href = 'account.html';
+    })();
+
+    function showResetForm(e) {
+      e.preventDefault();
+      document.getElementById('loginForm').style.display = 'none';
+      document.getElementById('resetForm').style.display = '';
+      document.querySelector('.auth-links').style.display = 'none';
+    }
+
+    function showLoginForm(e) {
+      e.preventDefault();
+      document.getElementById('loginForm').style.display = '';
+      document.getElementById('resetForm').style.display = 'none';
+      document.querySelector('.auth-links').style.display = '';
+    }
+
+    function togglePassword(inputId, btn) {
+      var input = document.getElementById(inputId);
+      var isPassword = input.type === 'password';
+      input.type = isPassword ? 'text' : 'password';
+      btn.querySelector('.eye-open').style.display = isPassword ? 'none' : '';
+      btn.querySelector('.eye-closed').style.display = isPassword ? '' : 'none';
+    }
+
+    async function handleLogin(e) {
+      e.preventDefault();
+      var btn = document.getElementById('loginBtn');
+      var msgEl = document.getElementById('authMessage');
+      btn.disabled = true;
+      btn.textContent = 'Signing in...';
+      msgEl.style.display = 'none';
+
+      var email = document.getElementById('loginEmail').value;
+      var password = document.getElementById('loginPassword').value;
+
+      var result = await signIn(email, password);
+
+      if (result.error) {
+        msgEl.className = 'auth-message auth-error';
+        msgEl.textContent = result.error.message;
+        msgEl.style.display = 'block';
+        btn.disabled = false;
+        btn.textContent = 'Sign In';
+      } else {
+        msgEl.className = 'auth-message auth-success';
+        msgEl.textContent = 'Welcome back! Redirecting...';
+        msgEl.style.display = 'block';
+        setTimeout(function() { window.location.href = 'account.html'; }, 800);
+      }
+    }
+
+    async function handleReset(e) {
+      e.preventDefault();
+      var msgEl = document.getElementById('authMessage');
+      var email = document.getElementById('resetEmail').value;
+      var result = await resetPassword(email);
+
+      msgEl.className = 'auth-message auth-success';
+      msgEl.textContent = 'If an account exists with that email, you will receive a reset link.';
+      msgEl.style.display = 'block';
+    }
+  </script>
+
+</body>
+</html>
