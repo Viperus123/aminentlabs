@@ -5,7 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Partner Program — AMINENT LABS</title>
   <meta name="description" content="Join the AMINENT LABS affiliate partner program. Earn commission promoting research-grade peptides.">
-  <link rel="icon" type="image/png" href="favicon/newfavicon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png">
   <meta property="og:title" content="Partner Program — AMINENT LABS">
   <meta property="og:description" content="Join the AMINENT LABS affiliate partner program. Earn commission promoting research-grade peptides.">
   <meta property="og:type" content="website">
@@ -15,239 +17,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
-  <style>
-    /* --- Commission Banner --- */
-    .commission-banner {
-      background: linear-gradient(135deg, #0A192F 0%, #1a365d 100%);
-      border-radius: 12px;
-      padding: 3rem 2.5rem;
-      text-align: center;
-      color: #fff;
-      position: relative;
-      overflow: hidden;
-    }
-    .commission-banner::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(circle at 30% 50%, rgba(59, 130, 246, 0.15), transparent 60%);
-      pointer-events: none;
-    }
-    .commission-banner .commission-number {
-      font-size: 4rem;
-      font-weight: 700;
-      line-height: 1;
-      letter-spacing: -0.02em;
-    }
-    .commission-banner .commission-label {
-      font-size: 1.15rem;
-      font-weight: 500;
-      margin-top: 0.5rem;
-      color: rgba(255, 255, 255, 0.9);
-    }
-    .commission-banner .commission-sub {
-      font-size: 0.9rem;
-      color: rgba(255, 255, 255, 0.6);
-      margin-top: 0.5rem;
-    }
-
-    /* --- Steps --- */
-    .partner-steps {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 0;
-      counter-reset: step;
-      position: relative;
-    }
-    .partner-step {
-      position: relative;
-      padding: 2rem;
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      counter-increment: step;
-      transition: all var(--transition);
-      background: var(--bg);
-    }
-    .partner-step:hover {
-      box-shadow: var(--card-hover);
-      transform: translateY(-2px);
-    }
-    .partner-step::before {
-      content: counter(step);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 40px;
-      height: 40px;
-      background: var(--accent);
-      color: #fff;
-      border-radius: 50%;
-      font-size: 0.9rem;
-      font-weight: 600;
-      margin-bottom: 1.25rem;
-    }
-    .partner-step:not(:last-child)::after {
-      content: '';
-      position: absolute;
-      top: 2rem;
-      right: -1.25rem;
-      width: 2.5rem;
-      height: 2px;
-      background: linear-gradient(90deg, var(--accent), var(--border));
-      z-index: 1;
-      transform: translateY(18px);
-    }
-    .partner-step h4 {
-      margin-bottom: 0.5rem;
-    }
-    .partner-step p {
-      font-size: 0.9rem;
-      color: var(--text-secondary);
-      line-height: 1.6;
-    }
-
-    /* --- Benefits --- */
-    .partner-highlights {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 1.5rem;
-    }
-    .partner-highlight {
-      display: flex;
-      gap: 1.25rem;
-      align-items: flex-start;
-      padding: 2rem;
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      transition: all var(--transition);
-    }
-    .partner-highlight:hover {
-      box-shadow: var(--card-hover);
-      transform: translateY(-2px);
-    }
-    .partner-highlight-icon {
-      width: 44px;
-      height: 44px;
-      border-radius: 10px;
-      background: rgba(59, 130, 246, 0.08);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-    .partner-highlight-icon svg {
-      width: 22px;
-      height: 22px;
-      stroke: var(--accent);
-      stroke-width: 1.5;
-      fill: none;
-    }
-    .partner-highlight h4 {
-      font-size: 0.95rem;
-      margin-bottom: 0.35rem;
-    }
-    .partner-highlight p {
-      font-size: 0.85rem;
-      color: var(--text-secondary);
-      line-height: 1.55;
-      margin: 0;
-    }
-
-    /* --- Form Card --- */
-    .partner-form-card {
-      max-width: 600px;
-      margin: 0 auto;
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 2.5rem;
-      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
-    }
-    .partner-form {
-      display: grid;
-      gap: 1.25rem;
-    }
-    .partner-form-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1.25rem;
-    }
-    .partner-form label {
-      display: block;
-      font-size: 0.75rem;
-      font-weight: 500;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: var(--text-secondary);
-      margin-bottom: 0.4rem;
-    }
-    .partner-form input,
-    .partner-form select,
-    .partner-form textarea {
-      width: 100%;
-      padding: 0.8rem 1rem;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      font-family: inherit;
-      font-size: 0.9rem;
-      color: var(--text);
-      background: var(--bg-alt);
-      transition: all var(--transition);
-    }
-    .partner-form input:focus,
-    .partner-form select:focus,
-    .partner-form textarea:focus {
-      outline: none;
-      border-color: var(--accent);
-      background: var(--bg);
-      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-    }
-    .partner-form textarea {
-      resize: vertical;
-      min-height: 100px;
-    }
-    .partner-form .btn {
-      width: 100%;
-      justify-content: center;
-      text-align: center;
-      padding: 1rem;
-    }
-    .partner-form-success {
-      display: none;
-      text-align: center;
-      padding: 2.5rem;
-      background: #E8F5E9;
-      border-radius: 12px;
-      color: #2E7D32;
-      font-weight: 500;
-    }
-
-    @media (max-width: 768px) {
-      .partner-steps {
-        grid-template-columns: 1fr;
-        gap: 1.25rem;
-      }
-      .partner-step:not(:last-child)::after {
-        display: none;
-      }
-      .partner-highlights {
-        grid-template-columns: 1fr;
-      }
-      .partner-form-row {
-        grid-template-columns: 1fr;
-      }
-      .partner-form-card {
-        padding: 1.5rem;
-      }
-      .commission-banner {
-        padding: 2rem 1.5rem;
-      }
-      .commission-banner .commission-number {
-        font-size: 3rem;
-      }
-    }
-  </style>
 </head>
 <body>
 
@@ -267,6 +36,7 @@
         <a href="faq.html">FAQ</a>
         <a href="contact.html">Contact</a>
         <a href="partners.html">Partners</a>
+        <a href="resources.html">Resources</a>
         <button class="theme-toggle" aria-label="Toggle theme">
           <svg class="icon-moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
           <svg class="icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
@@ -509,6 +279,7 @@
             <li><a href="faq.html">FAQ</a></li>
             <li><a href="contact.html">Contact</a></li>
             <li><a href="partners.html">Partners</a></li>
+            <li><a href="resources.html">Resources</a></li>
           </ul>
         </div>
         <div>

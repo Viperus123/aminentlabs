@@ -8,6 +8,20 @@
   if (saved) document.documentElement.setAttribute('data-theme', saved);
 })();
 
+// --- Google Analytics 4 ---
+(function() {
+  var GA_ID = 'G-H9R8S3JHS9';
+  var script = document.createElement('script');
+  script.async = true;
+  script.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA_ID;
+  document.head.appendChild(script);
+  window.dataLayer = window.dataLayer || [];
+  function gtag() { dataLayer.push(arguments); }
+  window.gtag = gtag;
+  gtag('js', new Date());
+  gtag('config', GA_ID);
+})();
+
 // --- Age Verification Gate ---
 (function() {
   if (sessionStorage.getItem('aminent_age_verified')) return;
@@ -70,6 +84,12 @@ document.addEventListener('DOMContentLoaded', function() {
   if (toggle && links) {
     toggle.addEventListener('click', function() {
       links.classList.toggle('open');
+    });
+    // Close menu when a nav link is tapped (mobile)
+    links.querySelectorAll('a').forEach(function(link) {
+      link.addEventListener('click', function() {
+        links.classList.remove('open');
+      });
     });
   }
 
@@ -185,6 +205,7 @@ document.addEventListener('DOMContentLoaded', function() {
   // --- Cart Drawer ---
   initCartDrawer();
   updateCartCount();
+  loadCartFromSupabase();
 
   // --- Lightbox ---
   initLightbox();
@@ -199,6 +220,13 @@ document.addEventListener('DOMContentLoaded', function() {
   if (document.getElementById('cartPageItems')) {
     renderCartPage();
   }
+
+  // --- Live Form Validation ---
+  addLiveValidation(document.getElementById('checkoutForm'));
+  addLiveValidation(document.getElementById('contactForm'));
+  addLiveValidation(document.getElementById('partnerForm'));
+  addLiveValidation(document.getElementById('signupForm'));
+  addLiveValidation(document.getElementById('loginForm'));
 
   // --- Checkout Page ---
   if (document.getElementById('checkoutForm')) {
@@ -229,6 +257,50 @@ function saveCart(cart) {
   renderCartDrawer();
   if (document.getElementById('cartPageItems')) {
     renderCartPage();
+  }
+  // Sync to Supabase if user is logged in
+  syncCartToSupabase(cart);
+}
+
+async function syncCartToSupabase(cart) {
+  try {
+    if (typeof supabase === 'undefined' || typeof getSession !== 'function') return;
+    var session = await getSession();
+    if (!session) return;
+    await supabase.from('carts').upsert({
+      user_id: session.user.id,
+      items: cart,
+      updated_at: new Date().toISOString()
+    }, { onConflict: 'user_id' });
+  } catch(e) {
+    // Fail silently — cart is always saved to localStorage
+  }
+}
+
+async function loadCartFromSupabase() {
+  try {
+    if (typeof supabase === 'undefined' || typeof getSession !== 'function') return;
+    var session = await getSession();
+    if (!session) return;
+    var { data } = await supabase
+      .from('carts')
+      .select('items')
+      .eq('user_id', session.user.id)
+      .single();
+    if (data && data.items && data.items.length > 0) {
+      // Merge: remote cart wins for items not in local cart
+      var local = getCart();
+      var merged = data.items.slice();
+      local.forEach(function(localItem) {
+        var exists = merged.find(function(r) { return r.name === localItem.name; });
+        if (!exists) merged.push(localItem);
+      });
+      localStorage.setItem('aminent_cart', JSON.stringify(merged));
+      updateCartCount();
+      renderCartDrawer();
+    }
+  } catch(e) {
+    // Fail silently
   }
 }
 
@@ -703,6 +775,48 @@ function renderConfirmation() {
   }
 
   detailsEl.innerHTML = html;
+}
+
+// ========================================
+// Form Validation Helpers
+// ========================================
+
+function setFieldError(input, message) {
+  input.classList.add('field-error');
+  input.classList.remove('field-success');
+  var existing = input.parentElement.querySelector('.field-error-msg');
+  if (existing) existing.remove();
+  var msg = document.createElement('span');
+  msg.className = 'field-error-msg';
+  msg.textContent = message;
+  input.parentElement.appendChild(msg);
+}
+
+function clearFieldError(input) {
+  input.classList.remove('field-error');
+  input.classList.add('field-success');
+  var existing = input.parentElement.querySelector('.field-error-msg');
+  if (existing) existing.remove();
+}
+
+function addLiveValidation(form) {
+  if (!form) return;
+  form.querySelectorAll('input[required], textarea[required], select[required]').forEach(function(field) {
+    field.addEventListener('blur', function() {
+      if (!this.value.trim()) {
+        setFieldError(this, 'This field is required.');
+      } else if (this.type === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.value)) {
+        setFieldError(this, 'Please enter a valid email address.');
+      } else {
+        clearFieldError(this);
+      }
+    });
+    field.addEventListener('input', function() {
+      if (this.classList.contains('field-error') && this.value.trim()) {
+        clearFieldError(this);
+      }
+    });
+  });
 }
 
 // Newsletter form

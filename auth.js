@@ -81,6 +81,8 @@ async function loadOrderHistory() {
   var container = document.getElementById('orderHistory');
   if (!container) return;
 
+  container.innerHTML = '<div class="account-loading">Loading orders...</div>';
+
   var user = await getUser();
   if (!user) return;
 
@@ -90,7 +92,12 @@ async function loadOrderHistory() {
     .eq('user_id', user.id)
     .order('created_at', { ascending: false });
 
-  if (error || !orders || orders.length === 0) {
+  if (error) {
+    container.innerHTML = '<div class="account-empty"><p style="color:#dc2626;">Failed to load orders. Please refresh and try again.</p></div>';
+    return;
+  }
+
+  if (!orders || orders.length === 0) {
     container.innerHTML = '<div class="account-empty">' +
       '<svg viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg>' +
       '<p>No orders yet</p>' +
@@ -130,6 +137,8 @@ async function loadAddresses() {
   var container = document.getElementById('addressBook');
   if (!container) return;
 
+  container.innerHTML = '<div class="account-loading">Loading addresses...</div>';
+
   var user = await getUser();
   if (!user) return;
 
@@ -139,7 +148,12 @@ async function loadAddresses() {
     .eq('user_id', user.id)
     .order('is_default', { ascending: false });
 
-  if (error || !addresses || addresses.length === 0) {
+  if (error) {
+    container.innerHTML = '<div class="account-empty"><p style="color:#dc2626;">Failed to load addresses. Please refresh and try again.</p></div>';
+    return;
+  }
+
+  if (!addresses || addresses.length === 0) {
     container.innerHTML = '<div class="account-empty">' +
       '<svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>' +
       '<p>No saved addresses</p>' +
@@ -174,6 +188,8 @@ async function loadTracking() {
   var container = document.getElementById('shipmentTracking');
   if (!container) return;
 
+  container.innerHTML = '<div class="account-loading">Loading shipments...</div>';
+
   var user = await getUser();
   if (!user) return;
 
@@ -184,7 +200,12 @@ async function loadTracking() {
     .not('tracking_number', 'is', null)
     .order('created_at', { ascending: false });
 
-  if (error || !shipments || shipments.length === 0) {
+  if (error) {
+    container.innerHTML = '<div class="account-empty"><p style="color:#dc2626;">Failed to load tracking info. Please refresh and try again.</p></div>';
+    return;
+  }
+
+  if (!shipments || shipments.length === 0) {
     container.innerHTML = '<div class="account-empty">' +
       '<svg viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 3v5a2 2 0 01-2 2h-1"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>' +
       '<p>No shipments to track</p>' +
