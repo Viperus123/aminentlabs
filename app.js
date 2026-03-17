@@ -734,7 +734,7 @@ async function submitOrder(e) {
   // Process
   setTimeout(function() {
     clearCart();
-    window.location.href = 'confirmation.html';
+    window.location.href = 'confirmation.html?order=' + encodeURIComponent(order.id);
   }, 1000);
 }
 
@@ -742,39 +742,80 @@ async function submitOrder(e) {
 // Confirmation Page
 // ========================================
 
-function renderConfirmation() {
-  var detailsEl = document.getElementById('confirmationDetails');
-  if (!detailsEl) return;
+async function showTracking(orderId) {
+  if (typeof supabase === 'undefined') return;
+  var { data } = await supabase.from('orders').select('tracking_number, tracking_carrier').eq('order_id', orderId).single();
+  if (!data || !data.tracking_number) return;
 
-  var order;
-  try {
-    order = JSON.parse(localStorage.getItem('aminent_last_order'));
-  } catch(e) {
-    order = null;
-  }
+  var urls = {
+    'USPS': 'https://tools.usps.com/go/TrackConfirmAction?tLabels=',
+    'UPS': 'https://www.ups.com/track?tracknum=',
+    'FedEx': 'https://www.fedex.com/fedextrack/?trknbr=',
+    'DHL': 'https://www.dhl.com/us-en/home/tracking/tracking-express.html?submit=1&tracking-id='
+  };
+  var base = urls[data.tracking_carrier] || urls['USPS'];
+  window.open(base + encodeURIComponent(data.tracking_number), '_blank', 'noopener');
+}
 
-  if (!order) {
-    detailsEl.innerHTML = '<p style="color:var(--text-secondary);">No order details found.</p>';
-    return;
-  }
+function buildConfirmationHTML(order) {
+  var addr = order.shipping_address || {};
+  var name = order.name || addr.name || '';
+  var city = order.city || addr.city || '';
+  var state = order.state || addr.state || '';
+  var zip = order.zip || addr.zip || '';
+  var subtotal = parseFloat(order.subtotal) || 0;
+  var shipping = parseFloat(order.shipping) || 0;
+  var total = parseFloat(order.total) || 0;
+  var date = order.date || (order.created_at ? new Date(order.created_at).toLocaleDateString() : '');
 
-  var html = '<div class="confirmation-detail-row"><span>Order ID</span><span><strong>' + order.id + '</strong></span></div>' +
-    '<div class="confirmation-detail-row"><span>Date</span><span>' + order.date + '</span></div>' +
-    '<div class="confirmation-detail-row"><span>Email</span><span>' + order.email + '</span></div>' +
-    '<div class="confirmation-detail-row"><span>Ship to</span><span>' + order.name + ', ' + order.city + ', ' + order.state + ' ' + order.zip + '</span></div>' +
-    '<div class="confirmation-detail-row"><span>Subtotal</span><span>$' + order.subtotal.toFixed(2) + '</span></div>' +
-    '<div class="confirmation-detail-row"><span>Shipping</span><span>' + (order.shipping === 0 ? 'Free' : '$' + order.shipping.toFixed(2)) + '</span></div>' +
-    '<div class="confirmation-detail-row total"><span>Total</span><span>$' + order.total.toFixed(2) + '</span></div>';
+  var html = '<div class="confirmation-detail-row"><span>Order ID</span><span><strong>' + (order.id || order.order_id) + '</strong></span></div>' +
+    '<div class="confirmation-detail-row"><span>Date</span><span>' + date + '</span></div>' +
+    '<div class="confirmation-detail-row"><span>Email</span><span>' + (order.email || '') + '</span></div>' +
+    '<div class="confirmation-detail-row"><span>Ship to</span><span>' + name + ', ' + city + ', ' + state + ' ' + zip + '</span></div>' +
+    '<div class="confirmation-detail-row"><span>Subtotal</span><span>$' + subtotal.toFixed(2) + '</span></div>' +
+    '<div class="confirmation-detail-row"><span>Shipping</span><span>' + (shipping === 0 ? 'Free' : '$' + shipping.toFixed(2)) + '</span></div>' +
+    '<div class="confirmation-detail-row total"><span>Total</span><span>$' + total.toFixed(2) + '</span></div>';
 
-  if (order.items && order.items.length) {
+  var items = order.items || [];
+  if (items.length) {
     html += '<div class="confirmation-items-list"><h4>Items</h4><ul>';
-    order.items.forEach(function(item) {
-      html += '<li><span>' + item.name + ' (' + item.dosage + ') x' + item.qty + '</span><span>$' + (item.price * item.qty).toFixed(2) + '</span></li>';
+    items.forEach(function(item) {
+      html += '<li><span>' + item.name + (item.dosage ? ' (' + item.dosage + ')' : '') + ' x' + item.qty + '</span><span>$' + (item.price * item.qty).toFixed(2) + '</span></li>';
     });
     html += '</ul></div>';
   }
+  return html;
+}
 
-  detailsEl.innerHTML = html;
+async function renderConfirmation() {
+  var detailsEl = document.getElementById('confirmationDetails');
+  if (!detailsEl) return;
+
+  detailsEl.innerHTML = '<p style="color:var(--text-secondary);">Loading order details...</p>';
+
+  // Try localStorage first (fastest, works for guest orders too)
+  var order = null;
+  try { order = JSON.parse(localStorage.getItem('aminent_last_order')); } catch(e) {}
+
+  if (order) {
+    detailsEl.innerHTML = buildConfirmationHTML(order);
+    return;
+  }
+
+  // Fall back to Supabase using order ID from URL
+  var params = new URLSearchParams(window.location.search);
+  var orderId = params.get('order');
+  if (orderId && typeof supabase !== 'undefined') {
+    try {
+      var { data, error } = await supabase.from('orders').select('*').eq('order_id', orderId).single();
+      if (data && !error) {
+        detailsEl.innerHTML = buildConfirmationHTML(data);
+        return;
+      }
+    } catch(e) {}
+  }
+
+  detailsEl.innerHTML = '<p style="color:var(--text-secondary);">Order details unavailable. Check your email for confirmation.</p>';
 }
 
 // ========================================
@@ -1109,9 +1150,6 @@ function submitContactForm(e) {
     if (window.scrollY > 50) nav.classList.add('scrolled');
   }
 
-  // --- 3. Announcement Bar (kept static for clean look) ---
-  function initMarquee() { }
-
   // --- 4. Parallax-lite on Hero Image ---
   function initParallax() {
     var heroImg = document.querySelector('.hero-vial-img');
@@ -1191,7 +1229,7 @@ function submitContactForm(e) {
     document.addEventListener('DOMContentLoaded', function() {
       initStatCounters();
       initNavScrollEffect();
-      initMarquee();
+
       initParallax();
       initMagneticButtons();
       initCardTilt();

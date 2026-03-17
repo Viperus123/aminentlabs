@@ -4915,6 +4915,38 @@ body.admin-loading {
   color: #2E7D32;
   font-weight: 500;
 }
+[data-theme="dark"] .partner-form-success {
+  background: rgba(46, 125, 50, 0.15);
+  color: #86efac;
+}
+.form-notice {
+  display: none;
+  margin-top: 1rem;
+  padding: 1rem;
+  border-radius: var(--radius);
+  font-size: 0.9rem;
+  text-align: center;
+}
+.form-notice.success {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  color: #166534;
+}
+.form-notice.error {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #991b1b;
+}
+[data-theme="dark"] .form-notice.success {
+  background: rgba(46, 125, 50, 0.15);
+  border-color: rgba(134, 239, 172, 0.3);
+  color: #86efac;
+}
+[data-theme="dark"] .form-notice.error {
+  background: rgba(153, 27, 27, 0.15);
+  border-color: rgba(252, 165, 165, 0.3);
+  color: #fca5a5;
+}
 @media (max-width: 768px) {
   .partner-steps {
     grid-template-columns: 1fr;

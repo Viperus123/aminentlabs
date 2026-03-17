@@ -247,7 +247,7 @@
           '<td>' + itemCount + ' item' + (itemCount !== 1 ? 's' : '') + '</td>' +
           '<td>$' + (parseFloat(order.total) || 0).toFixed(2) + '</td>' +
           '<td><span class="order-status ' + statusClass + '">' + (order.status || 'Processing') + '</span></td>' +
-          '<td><button class="btn-text" onclick=\'openOrderModal(' + JSON.stringify(JSON.stringify(order)) + ')\'>Edit</button></td>' +
+          '<td><button class="btn-text" onclick="openOrderModal(' + order.id + ')">Edit</button></td>' +
           '</tr>';
       });
 
@@ -273,8 +273,9 @@
     // ========================================
     // Order Edit Modal
     // ========================================
-    function openOrderModal(orderJson) {
-      var order = JSON.parse(orderJson);
+    function openOrderModal(orderId) {
+      var order = allOrders.find(function(o) { return o.id === orderId; });
+      if (!order) return;
       var modal = document.getElementById('orderModal');
 
       document.getElementById('editOrderId').value = order.id;
