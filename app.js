@@ -1020,3 +1020,189 @@ function submitContactForm(e) {
     btn.innerHTML = 'Send Message ';
   });
 }
+
+// ========================================
+// Enhanced Visual/Interactive Features
+// ========================================
+(function() {
+  'use strict';
+
+  // --- 1. Animated Stat Counters ---
+  function initStatCounters() {
+    var statNumbers = document.querySelectorAll('.stat-number');
+    if (!statNumbers.length) return;
+
+    function easeOutExpo(t) {
+      return t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
+    }
+
+    function animateCounter(el) {
+      var text = el.textContent.trim();
+      var duration = 2000;
+
+      // Determine if numeric or text
+      if (text === '98%+') {
+        var start = performance.now();
+        el.textContent = '0%+';
+        (function step(now) {
+          var progress = Math.min((now - start) / duration, 1);
+          var eased = easeOutExpo(progress);
+          var val = Math.round(eased * 98);
+          el.textContent = val + '%+';
+          if (progress < 1) requestAnimationFrame(step);
+        })(start);
+      } else if (text === '3') {
+        var start2 = performance.now();
+        el.textContent = '0';
+        (function step2(now) {
+          var progress = Math.min((now - start2) / duration, 1);
+          var eased = easeOutExpo(progress);
+          var val = Math.round(eased * 3);
+          el.textContent = val;
+          if (progress < 1) requestAnimationFrame(step2);
+        })(start2);
+      } else {
+        // Text values like "COA", "HPLC" — fade in
+        el.style.opacity = '0';
+        el.style.transition = 'opacity 1s ease';
+        // Force reflow then fade in
+        void el.offsetWidth;
+        el.style.opacity = '1';
+      }
+    }
+
+    var statObserver = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          animateCounter(entry.target);
+          statObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.3 });
+
+    statNumbers.forEach(function(el) {
+      statObserver.observe(el);
+    });
+  }
+
+  // --- 2. Nav Scroll Effect ---
+  function initNavScrollEffect() {
+    var nav = document.querySelector('.nav');
+    if (!nav) return;
+
+    var ticking = false;
+    window.addEventListener('scroll', function() {
+      if (!ticking) {
+        requestAnimationFrame(function() {
+          if (window.scrollY > 50) {
+            nav.classList.add('scrolled');
+          } else {
+            nav.classList.remove('scrolled');
+          }
+          ticking = false;
+        });
+        ticking = true;
+      }
+    }, { passive: true });
+
+    // Apply immediately in case already scrolled
+    if (window.scrollY > 50) nav.classList.add('scrolled');
+  }
+
+  // --- 3. Announcement Bar (kept static for clean look) ---
+  function initMarquee() { }
+
+  // --- 4. Parallax-lite on Hero Image ---
+  function initParallax() {
+    var heroImg = document.querySelector('.hero-vial-img');
+    if (!heroImg) return;
+    if (window.innerWidth <= 768) return;
+
+    var ticking = false;
+    window.addEventListener('scroll', function() {
+      if (!ticking) {
+        requestAnimationFrame(function() {
+          if (window.innerWidth > 768) {
+            var scrolled = window.scrollY;
+            var offset = Math.min(scrolled * 0.08, 30);
+            heroImg.style.transform = 'translateY(-' + offset + 'px)';
+          }
+          ticking = false;
+        });
+        ticking = true;
+      }
+    }, { passive: true });
+  }
+
+  // --- 5. Magnetic Button Effect ---
+  function initMagneticButtons() {
+    var buttons = document.querySelectorAll('.btn-primary, .btn-cart');
+    if (!buttons.length) return;
+
+    buttons.forEach(function(btn) {
+      btn.addEventListener('mousemove', function(e) {
+        var rect = btn.getBoundingClientRect();
+        var x = e.clientX - rect.left - rect.width / 2;
+        var y = e.clientY - rect.top - rect.height / 2;
+        var maxMove = 4;
+        var moveX = (x / (rect.width / 2)) * maxMove;
+        var moveY = (y / (rect.height / 2)) * maxMove;
+        btn.style.transform = 'translate(' + moveX + 'px, ' + moveY + 'px)';
+        btn.style.transition = 'transform 0.15s ease';
+      });
+
+      btn.addEventListener('mouseleave', function() {
+        btn.style.transform = 'translate(0, 0)';
+        btn.style.transition = 'transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+      });
+    });
+  }
+
+  // --- 6. Tilt Effect on Product Cards ---
+  function initCardTilt() {
+    if (!window.matchMedia('(pointer: fine)').matches) return;
+
+    var cards = document.querySelectorAll('.product-card');
+    if (!cards.length) return;
+
+    cards.forEach(function(card) {
+      card.addEventListener('mousemove', function(e) {
+        var rect = card.getBoundingClientRect();
+        var x = e.clientX - rect.left;
+        var y = e.clientY - rect.top;
+        var centerX = rect.width / 2;
+        var centerY = rect.height / 2;
+        var maxDeg = 3;
+        var rotateY = ((x - centerX) / centerX) * maxDeg;
+        var rotateX = ((centerY - y) / centerY) * maxDeg;
+        card.style.transform = 'perspective(600px) rotateX(' + rotateX + 'deg) rotateY(' + rotateY + 'deg)';
+        card.style.transition = 'transform 0.1s ease';
+      });
+
+      card.addEventListener('mouseleave', function() {
+        card.style.transform = 'perspective(600px) rotateX(0) rotateY(0)';
+        card.style.transition = 'transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+      });
+    });
+  }
+
+  // Initialize all features on DOMContentLoaded
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function() {
+      initStatCounters();
+      initNavScrollEffect();
+      initMarquee();
+      initParallax();
+      initMagneticButtons();
+      initCardTilt();
+    });
+  } else {
+    // DOM already ready
+    initStatCounters();
+    initNavScrollEffect();
+    initMarquee();
+    initParallax();
+    initMagneticButtons();
+    initCardTilt();
+  }
+})();

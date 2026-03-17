@@ -92,12 +92,8 @@ async function loadOrderHistory() {
     .eq('user_id', user.id)
     .order('created_at', { ascending: false });
 
-  if (error) {
-    container.innerHTML = '<div class="account-empty"><p style="color:#dc2626;">Failed to load orders. Please refresh and try again.</p></div>';
-    return;
-  }
-
-  if (!orders || orders.length === 0) {
+  if (error || !orders || orders.length === 0) {
+    if (error) console.warn('Orders query:', error.message);
     container.innerHTML = '<div class="account-empty">' +
       '<svg viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg>' +
       '<p>No orders yet</p>' +
