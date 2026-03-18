@@ -1,6 +1,7 @@
 -- ========================================
 -- AMINENT LABS — Supabase Schema
 -- Run in Supabase SQL Editor
+-- Safe to re-run (idempotent)
 -- ========================================
 
 -- Orders table (for checkout submissions)
@@ -25,9 +26,11 @@ CREATE TABLE IF NOT EXISTS orders (
 
 ALTER TABLE orders ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "Users can insert own orders" ON orders;
 CREATE POLICY "Users can insert own orders" ON orders FOR INSERT
   WITH CHECK (auth.uid() = user_id);
 
+DROP POLICY IF EXISTS "Users can view own orders" ON orders;
 CREATE POLICY "Users can view own orders" ON orders FOR SELECT
   USING (auth.uid() = user_id);
 
@@ -45,11 +48,11 @@ CREATE TABLE IF NOT EXISTS contact_submissions (
 
 ALTER TABLE contact_submissions ENABLE ROW LEVEL SECURITY;
 
--- Anyone (including unauthenticated) can submit contact form
+DROP POLICY IF EXISTS "Anyone can submit contact form" ON contact_submissions;
 CREATE POLICY "Anyone can submit contact form" ON contact_submissions FOR INSERT
   WITH CHECK (true);
 
--- Only admin can read submissions
+DROP POLICY IF EXISTS "Admin can view contact submissions" ON contact_submissions;
 CREATE POLICY "Admin can view contact submissions" ON contact_submissions FOR SELECT
   USING (
     (SELECT email FROM auth.users WHERE id = auth.uid()) = 'support@aminentlabs.com'
@@ -73,9 +76,11 @@ CREATE TABLE IF NOT EXISTS bulk_orders (
 
 ALTER TABLE bulk_orders ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "Anyone can submit bulk order" ON bulk_orders;
 CREATE POLICY "Anyone can submit bulk order" ON bulk_orders FOR INSERT
   WITH CHECK (true);
 
+DROP POLICY IF EXISTS "Admin can view bulk orders" ON bulk_orders;
 CREATE POLICY "Admin can view bulk orders" ON bulk_orders FOR SELECT
   USING (
     (SELECT email FROM auth.users WHERE id = auth.uid()) = 'support@aminentlabs.com'
@@ -90,5 +95,6 @@ CREATE TABLE IF NOT EXISTS newsletter_subscribers (
 
 ALTER TABLE newsletter_subscribers ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "Anyone can subscribe" ON newsletter_subscribers;
 CREATE POLICY "Anyone can subscribe" ON newsletter_subscribers FOR INSERT
   WITH CHECK (true);
