@@ -17,6 +17,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
+  <link rel="canonical" href="https://aminentlabs.com/bulk-order.html">
 </head>
 <body>
 
@@ -307,24 +308,34 @@
   <script src="auth.js"></script>
   <script src="app.js"></script>
   <script>
-    async function submitBulkOrder(e) {
+    function submitBulkOrder(e) {
       e.preventDefault();
-      const btn = document.getElementById('bulkSubmitBtn');
+      var btn = document.getElementById('bulkSubmitBtn');
+      var successEl = document.getElementById('bulkSuccess');
+      var errorEl = document.getElementById('bulkError');
+      successEl.style.display = 'none';
+      errorEl.style.display = 'none';
       btn.disabled = true;
       btn.textContent = 'Submitting...';
-      const form = e.target;
-      const data = Object.fromEntries(new FormData(form));
-      try {
-        const { error } = await supabase.from('bulk_orders').insert([data]);
-        if (error) throw error;
-        document.getElementById('bulkSuccess').style.display = 'block';
-        form.reset();
-      } catch {
-        document.getElementById('bulkError').style.display = 'block';
-      } finally {
+      var formData = new FormData(e.target);
+      fetch('https://formsubmit.co/ajax/support@aminentlabs.com', {
+        method: 'POST',
+        headers: { 'Accept': 'application/json' },
+        body: formData
+      })
+      .then(function(res) {
+        if (res.ok) {
+          successEl.style.display = 'block';
+          e.target.reset();
+        } else {
+          errorEl.style.display = 'block';
+        }
+      })
+      .catch(function() { errorEl.style.display = 'block'; })
+      .finally(function() {
         btn.disabled = false;
-        btn.innerHTML = 'Submit Request <span class="btn-arrow-icon">→</span>';
-      }
+        btn.innerHTML = 'Submit Request ';
+      });
     }
   </script>
 
