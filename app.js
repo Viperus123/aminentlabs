@@ -864,12 +864,26 @@ function addLiveValidation(form) {
 function handleNewsletter(e) {
   e.preventDefault();
   var input = e.target.querySelector('input');
-  if (input && input.value) {
-    var btn = e.target.querySelector('button');
-    btn.textContent = 'Subscribed!';
-    input.value = '';
-    setTimeout(function() { btn.textContent = 'Subscribe'; }, 2000);
-  }
+  var btn = e.target.querySelector('button');
+  var email = input && input.value;
+  if (!email) return;
+  btn.disabled = true;
+  btn.textContent = 'Subscribing...';
+  supabase.from('newsletter_subscribers').insert([{ email: email }])
+    .then(function(res) {
+      if (res.error && res.error.code === '23505') {
+        // Already subscribed — still show success
+      } else if (res.error) {
+        throw res.error;
+      }
+      btn.textContent = 'Subscribed!';
+      input.value = '';
+      setTimeout(function() { btn.textContent = 'Subscribe'; btn.disabled = false; }, 2000);
+    })
+    .catch(function() {
+      btn.textContent = 'Try again';
+      btn.disabled = false;
+    });
 }
 
 // ========================================

@@ -317,25 +317,29 @@
       errorEl.style.display = 'none';
       btn.disabled = true;
       btn.textContent = 'Submitting...';
-      var formData = new FormData(e.target);
-      fetch('https://formsubmit.co/ajax/support@aminentlabs.com', {
-        method: 'POST',
-        headers: { 'Accept': 'application/json' },
-        body: formData
-      })
-      .then(function(res) {
-        if (res.ok) {
+      var fd = new FormData(e.target);
+      var data = {
+        name: fd.get('name'),
+        email: fd.get('email'),
+        organization: fd.get('organization'),
+        org_type: fd.get('org_type'),
+        qty_glp3rt: fd.get('qty_glp3rt'),
+        qty_bpc157: fd.get('qty_bpc157'),
+        qty_ghkcu: fd.get('qty_ghkcu'),
+        po_number: fd.get('po_number'),
+        notes: fd.get('notes')
+      };
+      supabase.from('bulk_orders').insert([data])
+        .then(function(res) {
+          if (res.error) throw res.error;
           successEl.style.display = 'block';
           e.target.reset();
-        } else {
-          errorEl.style.display = 'block';
-        }
-      })
-      .catch(function() { errorEl.style.display = 'block'; })
-      .finally(function() {
-        btn.disabled = false;
-        btn.innerHTML = 'Submit Request ';
-      });
+        })
+        .catch(function() { errorEl.style.display = 'block'; })
+        .finally(function() {
+          btn.disabled = false;
+          btn.innerHTML = 'Submit Request ';
+        });
     }
   </script>
 
