@@ -1182,28 +1182,28 @@ function submitContactForm(e) {
 
   // Collect form data
   var formData = new FormData(form);
+  var data = {
+    name: formData.get('name'),
+    email: formData.get('email'),
+    organization: formData.get('organization') || null,
+    subject: formData.get('subject') || null,
+    message: formData.get('message')
+  };
 
-  // Submit to Formsubmit.co (free email forwarding service)
-  fetch('https://formsubmit.co/ajax/support@aminentlabs.com', {
-    method: 'POST',
-    headers: { 'Accept': 'application/json' },
-    body: formData
-  })
-  .then(function(response) {
-    if (response.ok) {
+  // Submit to Supabase
+  supabase.from('contact_submissions').insert([data])
+    .then(function(res) {
+      if (res.error) throw res.error;
       successEl.style.display = 'block';
       form.reset();
-    } else {
+    })
+    .catch(function() {
       errorEl.style.display = 'block';
-    }
-  })
-  .catch(function() {
-    errorEl.style.display = 'block';
-  })
-  .finally(function() {
-    btn.disabled = false;
-    btn.innerHTML = 'Send Message ';
-  });
+    })
+    .finally(function() {
+      btn.disabled = false;
+      btn.innerHTML = 'Send Message ';
+    });
 }
 
 // ========================================

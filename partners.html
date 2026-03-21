@@ -347,19 +347,19 @@
       btn.textContent = 'Submitting...';
 
       var formData = new FormData(form);
+      var data = {
+        name: formData.get('name'),
+        email: formData.get('email'),
+        organization: formData.get('organization') || null,
+        subject: 'Partner Application',
+        message: 'Partner type: ' + (formData.get('partner_type') || '') + '\n' + (formData.get('message') || '')
+      };
 
-      fetch('https://formsubmit.co/ajax/support@aminentlabs.com', {
-        method: 'POST',
-        headers: { 'Accept': 'application/json' },
-        body: formData
-      })
-      .then(function(response) {
-        if (response.ok) {
-          form.style.display = 'none';
-          document.getElementById('partnerSuccess').style.display = 'block';
-        } else {
-          alert('Something went wrong. Please email support@aminentlabs.com directly.');
-        }
+      supabase.from('contact_submissions').insert([data])
+      .then(function(res) {
+        if (res.error) throw res.error;
+        form.style.display = 'none';
+        document.getElementById('partnerSuccess').style.display = 'block';
       })
       .catch(function() {
         alert('Something went wrong. Please email support@aminentlabs.com directly.');
