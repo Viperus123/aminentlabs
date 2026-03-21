@@ -6421,3 +6421,185 @@ html[data-theme="dark"] .nav.scrolled {
   color: var(--text);
   font-weight: 500;
 }
+
+/* ----------------------------------------
+   Dark Mode & Responsive Fixes
+   ---------------------------------------- */
+
+/* 1. Dark mode hero section */
+[data-theme="dark"] .hero {
+  background: linear-gradient(135deg, #0a0a1a 0%, #111827 50%, #0f172a 100%);
+}
+
+[data-theme="dark"] .hero-gradient {
+  background: linear-gradient(180deg, #0a0a1a 0%, #111827 40%, #0f172a 70%, #111827 100%);
+}
+
+/* 2. Dark mode product detail image background */
+[data-theme="dark"] .product-detail-img {
+  background: linear-gradient(145deg, #1a1a2e, #16213e);
+}
+
+/* 3. Dark mode stats bar text contrast */
+[data-theme="dark"] .stats-bar {
+  background: #0f172a;
+}
+
+[data-theme="dark"] .stat-number {
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .stat-label {
+  color: rgba(226, 232, 240, 0.7);
+}
+
+/* 4. Dark mode newsletter input placeholder */
+[data-theme="dark"] .newsletter-form input::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+[data-theme="dark"] .newsletter-form input {
+  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* 5. Stats bar numbers on mobile - larger and more readable */
+@media (max-width: 768px) {
+  .stat-number {
+    font-size: 1.75rem;
+    line-height: 1.2;
+  }
+
+  .stat-label {
+    font-size: 0.7rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .stat-number {
+    font-size: 1.5rem;
+  }
+}
+
+/* 6. Newsletter form mid-screen breakpoint */
+@media (max-width: 1024px) and (min-width: 769px) {
+  .newsletter-form {
+    flex-wrap: wrap;
+  }
+
+  .newsletter-form input {
+    min-width: 200px;
+    flex: 1 1 60%;
+  }
+
+  .newsletter-form button {
+    flex: 0 0 auto;
+  }
+}
+
+@media (max-width: 900px) and (min-width: 769px) {
+  .newsletter-form {
+    flex-direction: column;
+  }
+
+  .newsletter-form input {
+    width: 100%;
+  }
+
+  .newsletter-form button {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+/* 7. Hero buttons full width on mobile */
+@media (max-width: 480px) {
+  .hero-actions {
+    width: 100%;
+  }
+
+  .hero-actions .btn,
+  .hero-actions .btn-hero-secondary,
+  .hero-actions a {
+    width: 100%;
+    text-align: center;
+    justify-content: center;
+  }
+}
+
+/* 8. Announcement bar spacing between bullet-separated items */
+.announcement-bar-content span + span {
+  margin-left: 0.25rem;
+}
+
+.announcement-bar-content {
+  letter-spacing: 0.02em;
+  word-spacing: 0.15em;
+}
+
+@media (max-width: 768px) {
+  .announcement-bar-content {
+    padding: 0 2rem;
+  }
+}
+
+/* ========================================
+   Interactive States & Accessibility
+   ======================================== */
+
+/* Focus states for keyboard navigation */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Product card Add button hover & active */
+.btn-cart:hover {
+  background: var(--accent);
+  color: #fff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(37,99,235,0.3);
+}
+.btn-cart:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(37,99,235,0.2);
+}
+
+/* Product card purity badge hover */
+.product-card-purity:hover {
+  color: var(--accent);
+}
+
+/* Footer link hover background */
+.footer a:hover {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+/* Disabled button styling */
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+/* Comparison table row hover */
+.compare-table tr:hover td {
+  background: rgba(37,99,235,0.04);
+}
+[data-theme="dark"] .compare-table tr:hover td {
+  background: rgba(37,99,235,0.08);
+}
+
+/* Form input focus states */
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+}
