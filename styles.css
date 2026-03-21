@@ -6028,25 +6028,6 @@ html[data-theme="dark"] .nav.scrolled {
   animation: orbDrift2 15s ease-in-out infinite;
 }
 
-/* Gradient border on form panel */
-.auth-split-form-inner {
-  position: relative;
-}
-
-.auth-split-form-inner::before {
-  content: '';
-  position: absolute;
-  top: -1px; left: -1px; right: -1px; bottom: -1px;
-  background: linear-gradient(135deg, rgba(37,99,235,0.15), transparent 40%, transparent 60%, rgba(147,130,220,0.15));
-  border-radius: 17px;
-  z-index: -1;
-  opacity: 0;
-  transition: opacity 0.4s ease;
-}
-
-.auth-split-form:hover .auth-split-form-inner::before {
-  opacity: 1;
-}
 
 /* Animated feature icons */
 .auth-split-feature svg {
