@@ -2,15 +2,31 @@
    AMINENT LABS — Global JavaScript
    ======================================== */
 
+// --- Cookie Utilities ---
+function setCookie(name, value, days) {
+  var d = new Date();
+  d.setTime(d.getTime() + (days * 24 * 60 * 60 * 1000));
+  document.cookie = name + '=' + value + ';expires=' + d.toUTCString() + ';path=/;SameSite=Lax';
+}
+function getCookie(name) {
+  var match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+  return match ? match[2] : null;
+}
+function deleteCookie(name) {
+  document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;SameSite=Lax';
+}
+
 // --- Apply Saved Theme (before render to avoid flash) ---
 (function() {
-  var saved = localStorage.getItem('aminent_theme');
+  var saved = getCookie('aminent_theme') || localStorage.getItem('aminent_theme');
   if (saved) document.documentElement.setAttribute('data-theme', saved);
 })();
 
-// --- Google Analytics 4 ---
-(function() {
-  var GA_ID = 'G-H9R8S3JHS9';
+// --- Google Analytics 4 (consent-aware) ---
+var GA_ID = 'G-H9R8S3JHS9';
+function loadGA() {
+  if (window._gaLoaded) return;
+  window._gaLoaded = true;
   var script = document.createElement('script');
   script.async = true;
   script.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA_ID;
@@ -19,12 +35,124 @@
   function gtag() { dataLayer.push(arguments); }
   window.gtag = gtag;
   gtag('js', new Date());
-  gtag('config', GA_ID);
+  gtag('config', GA_ID, { anonymize_ip: true });
+}
+
+// Only load GA if user has accepted cookies
+(function() {
+  var consent = getCookie('aminent_cookie_consent');
+  if (consent === 'all' || consent === 'analytics') {
+    loadGA();
+  }
 })();
+
+// --- Cookie Consent Banner ---
+(function() {
+  if (getCookie('aminent_cookie_consent')) return;
+
+  var banner = document.createElement('div');
+  banner.id = 'cookieConsent';
+  banner.style.cssText = 'position:fixed;bottom:0;left:0;right:0;z-index:10000;background:var(--bg-alt,#1a1a2e);border-top:1px solid var(--border,rgba(255,255,255,0.1));padding:1rem 1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;font-size:0.875rem;color:var(--text,#e0e0e0);box-shadow:0 -4px 20px rgba(0,0,0,0.15);';
+  banner.innerHTML =
+    '<div style="flex:1;min-width:250px;">' +
+      '<strong>We value your privacy</strong>' +
+      '<p style="margin:0.25rem 0 0;opacity:0.8;font-size:0.8rem;">We use cookies for analytics, preferences, and site functionality. You can choose which cookies to accept.</p>' +
+    '</div>' +
+    '<div style="display:flex;gap:0.5rem;flex-shrink:0;flex-wrap:wrap;">' +
+      '<button id="cookieAcceptAll" style="padding:0.5rem 1.25rem;background:#2563eb;color:#fff;border:none;border-radius:8px;font-size:0.82rem;font-weight:500;cursor:pointer;">Accept All</button>' +
+      '<button id="cookieEssential" style="padding:0.5rem 1.25rem;background:transparent;color:var(--text,#e0e0e0);border:1px solid var(--border,rgba(255,255,255,0.2));border-radius:8px;font-size:0.82rem;font-weight:500;cursor:pointer;">Essential Only</button>' +
+      '<button id="cookieSettings" style="padding:0.5rem 1.25rem;background:transparent;color:var(--text-light,#999);border:none;border-radius:8px;font-size:0.82rem;cursor:pointer;text-decoration:underline;">Customize</button>' +
+    '</div>';
+
+  document.body.appendChild(banner);
+
+  document.getElementById('cookieAcceptAll').addEventListener('click', function() {
+    setCookie('aminent_cookie_consent', 'all', 365);
+    loadGA();
+    banner.style.transition = 'transform 0.4s ease, opacity 0.4s ease';
+    banner.style.transform = 'translateY(100%)';
+    banner.style.opacity = '0';
+    setTimeout(function() { banner.remove(); }, 400);
+  });
+
+  document.getElementById('cookieEssential').addEventListener('click', function() {
+    setCookie('aminent_cookie_consent', 'essential', 365);
+    banner.style.transition = 'transform 0.4s ease, opacity 0.4s ease';
+    banner.style.transform = 'translateY(100%)';
+    banner.style.opacity = '0';
+    setTimeout(function() { banner.remove(); }, 400);
+  });
+
+  document.getElementById('cookieSettings').addEventListener('click', function() {
+    showCookieSettings();
+  });
+})();
+
+function showCookieSettings() {
+  var existing = document.getElementById('cookieSettingsModal');
+  if (existing) existing.remove();
+
+  var modal = document.createElement('div');
+  modal.id = 'cookieSettingsModal';
+  modal.style.cssText = 'position:fixed;inset:0;z-index:10001;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;padding:1rem;';
+  modal.innerHTML =
+    '<div style="background:var(--bg,#0f0f23);border:1px solid var(--border,rgba(255,255,255,0.1));border-radius:16px;padding:2rem;max-width:450px;width:100%;color:var(--text,#e0e0e0);">' +
+      '<h3 style="margin:0 0 1rem;font-size:1.1rem;">Cookie Preferences</h3>' +
+      '<div style="margin-bottom:1rem;">' +
+        '<label style="display:flex;align-items:center;justify-content:space-between;padding:0.75rem 0;border-bottom:1px solid var(--border,rgba(255,255,255,0.1));">' +
+          '<div><strong>Essential</strong><br><span style="font-size:0.78rem;opacity:0.7;">Required for site functionality</span></div>' +
+          '<input type="checkbox" checked disabled style="width:18px;height:18px;">' +
+        '</label>' +
+        '<label style="display:flex;align-items:center;justify-content:space-between;padding:0.75rem 0;border-bottom:1px solid var(--border,rgba(255,255,255,0.1));cursor:pointer;">' +
+          '<div><strong>Analytics</strong><br><span style="font-size:0.78rem;opacity:0.7;">Google Analytics — helps us improve the site</span></div>' +
+          '<input type="checkbox" id="cookiePrefAnalytics" checked style="width:18px;height:18px;cursor:pointer;">' +
+        '</label>' +
+        '<label style="display:flex;align-items:center;justify-content:space-between;padding:0.75rem 0;cursor:pointer;">' +
+          '<div><strong>Preferences</strong><br><span style="font-size:0.78rem;opacity:0.7;">Theme, age verification memory</span></div>' +
+          '<input type="checkbox" id="cookiePrefFunctional" checked style="width:18px;height:18px;cursor:pointer;">' +
+        '</label>' +
+      '</div>' +
+      '<div style="display:flex;gap:0.5rem;">' +
+        '<button id="cookieSavePrefs" style="flex:1;padding:0.6rem;background:#2563eb;color:#fff;border:none;border-radius:8px;font-size:0.875rem;font-weight:500;cursor:pointer;">Save Preferences</button>' +
+        '<button id="cookieCancelPrefs" style="padding:0.6rem 1rem;background:transparent;color:var(--text,#e0e0e0);border:1px solid var(--border,rgba(255,255,255,0.2));border-radius:8px;font-size:0.875rem;cursor:pointer;">Cancel</button>' +
+      '</div>' +
+    '</div>';
+
+  document.body.appendChild(modal);
+
+  modal.addEventListener('click', function(e) {
+    if (e.target === modal) modal.remove();
+  });
+
+  document.getElementById('cookieCancelPrefs').addEventListener('click', function() {
+    modal.remove();
+  });
+
+  document.getElementById('cookieSavePrefs').addEventListener('click', function() {
+    var analytics = document.getElementById('cookiePrefAnalytics').checked;
+    var functional = document.getElementById('cookiePrefFunctional').checked;
+    var value = 'essential';
+    if (analytics && functional) value = 'all';
+    else if (analytics) value = 'analytics';
+    else if (functional) value = 'functional';
+
+    setCookie('aminent_cookie_consent', value, 365);
+    if (analytics) loadGA();
+    modal.remove();
+
+    var banner = document.getElementById('cookieConsent');
+    if (banner) {
+      banner.style.transition = 'transform 0.4s ease, opacity 0.4s ease';
+      banner.style.transform = 'translateY(100%)';
+      banner.style.opacity = '0';
+      setTimeout(function() { banner.remove(); }, 400);
+    }
+  });
+}
 
 // --- Age Verification Gate ---
 (function() {
-  if (sessionStorage.getItem('aminent_age_verified')) return;
+  if (getCookie('aminent_age_verified') || sessionStorage.getItem('aminent_age_verified')) return;
 
   // Create overlay
   var overlay = document.createElement('div');
@@ -48,6 +176,7 @@
 
   document.getElementById('ageGateConfirm').addEventListener('click', function() {
     sessionStorage.setItem('aminent_age_verified', 'true');
+    setCookie('aminent_age_verified', 'true', 1);
     var gate = overlay.querySelector('.age-gate');
     gate.style.transition = 'transform 0.4s cubic-bezier(0.4, 0, 0, 1), opacity 0.4s ease';
     gate.style.transform = 'scale(0.92)';
@@ -1027,6 +1156,7 @@ function initThemeToggle() {
       var next = current === 'dark' ? 'light' : 'dark';
       document.documentElement.setAttribute('data-theme', next);
       localStorage.setItem('aminent_theme', next);
+      setCookie('aminent_theme', next, 365);
     });
   });
 }
