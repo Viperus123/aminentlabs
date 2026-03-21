@@ -39,6 +39,16 @@ async function signIn(email, password) {
   return { data: data, error: error };
 }
 
+async function signInWithGoogle() {
+  var { data, error } = await supabase.auth.signInWithOAuth({
+    provider: 'google',
+    options: {
+      redirectTo: window.location.origin + '/account.html'
+    }
+  });
+  return { data: data, error: error };
+}
+
 async function signOut() {
   await supabase.auth.signOut();
   window.location.href = 'index.html';

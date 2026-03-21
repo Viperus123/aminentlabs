@@ -3213,6 +3213,43 @@ html[data-theme="dark"] .auth-logo {
   color: var(--text-secondary);
 }
 
+.btn-google {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.75rem 1.25rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--text);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-google:hover {
+  background: var(--bg-alt);
+  border-color: var(--text-light);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+.auth-separator {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 1.25rem 0;
+  color: var(--text-light);
+  font-size: 0.82rem;
+}
+.auth-separator::before,
+.auth-separator::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
 .auth-form {
   display: flex;
   flex-direction: column;
