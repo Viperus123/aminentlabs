@@ -1,8 +1,3 @@
 User-agent: *
 Allow: /
-
 Sitemap: https://aminentlabs.com/sitemap.xml
-
-Disallow: /cart.html
-Disallow: /checkout.html
-Disallow: /confirmation.html
