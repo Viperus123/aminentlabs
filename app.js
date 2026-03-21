@@ -527,8 +527,35 @@ function removeFromCart(name) {
   saveCart(cart);
 }
 
+function getCartTotalQty() {
+  return getCart().reduce(function(sum, item) { return sum + item.qty; }, 0);
+}
+
+function getBulkDiscount(totalQty) {
+  if (totalQty >= 10) return { percent: 20, label: '20% Bulk Discount (10+ vials)' };
+  if (totalQty >= 6) return { percent: 15, label: '15% Bulk Discount (6+ vials)' };
+  if (totalQty >= 3) return { percent: 10, label: '10% Bulk Discount (3+ vials)' };
+  return { percent: 0, label: '' };
+}
+
+function getNextDiscountTier(totalQty) {
+  if (totalQty >= 10) return null;
+  if (totalQty >= 6) return { needed: 10 - totalQty, percent: 20 };
+  if (totalQty >= 3) return { needed: 6 - totalQty, percent: 15 };
+  return { needed: 3 - totalQty, percent: 10 };
+}
+
 function getCartTotal() {
-  return getCart().reduce(function(sum, item) { return sum + (item.price * item.qty); }, 0);
+  var subtotal = getCart().reduce(function(sum, item) { return sum + (item.price * item.qty); }, 0);
+  return subtotal;
+}
+
+function getCartTotalWithDiscount() {
+  var subtotal = getCartTotal();
+  var totalQty = getCartTotalQty();
+  var discount = getBulkDiscount(totalQty);
+  var discountAmount = subtotal * (discount.percent / 100);
+  return { subtotal: subtotal, discount: discount, discountAmount: discountAmount, total: subtotal - discountAmount };
 }
 
 function updateCartCount() {
@@ -641,10 +668,26 @@ function renderCartDrawer() {
   });
   itemsEl.innerHTML = html;
 
-  var total = getCartTotal().toFixed(2);
+  var cartData = getCartTotalWithDiscount();
+  var nextTier = getNextDiscountTier(getCartTotalQty());
+  var discountHtml = '';
+  if (cartData.discount.percent > 0) {
+    discountHtml = '<div class="cart-subtotal" style="color:#22c55e;">' +
+      '<span class="cart-subtotal-label">' + cartData.discount.label + '</span>' +
+      '<span class="cart-subtotal-value">-$' + cartData.discountAmount.toFixed(2) + '</span></div>';
+  }
+  var tierHtml = '';
+  if (nextTier) {
+    tierHtml = '<div style="font-size:0.75rem;color:var(--accent);text-align:center;padding:0.5rem 0;">Add ' + nextTier.needed + ' more vial' + (nextTier.needed > 1 ? 's' : '') + ' for ' + nextTier.percent + '% off!</div>';
+  }
   footerEl.innerHTML = '<div class="cart-subtotal">' +
     '<span class="cart-subtotal-label">Subtotal</span>' +
-    '<span class="cart-subtotal-value">$' + total + '</span></div>' +
+    '<span class="cart-subtotal-value">$' + cartData.subtotal.toFixed(2) + '</span></div>' +
+    discountHtml +
+    '<div class="cart-subtotal" style="font-weight:600;">' +
+    '<span class="cart-subtotal-label">Total</span>' +
+    '<span class="cart-subtotal-value">$' + cartData.total.toFixed(2) + '</span></div>' +
+    tierHtml +
     '<a href="cart.html" class="btn btn-primary" style="display:block;text-align:center;">View Cart & Checkout</a>' +
     '<button class="cart-continue" onclick="closeCartDrawer()">Continue Shopping</button>';
 }
@@ -717,12 +760,25 @@ function renderCartPage() {
   itemsEl.innerHTML = html;
 
   if (summaryEl) {
-    var subtotal = getCartTotal();
-    var shipping = subtotal >= 150 ? 0 : 9.95;
-    var total = subtotal + shipping;
+    var cartData = getCartTotalWithDiscount();
+    var subtotal = cartData.subtotal;
+    var discountedTotal = cartData.total;
+    var shipping = discountedTotal >= 150 ? 0 : 9.95;
+    var total = discountedTotal + shipping;
+    var nextTier = getNextDiscountTier(getCartTotalQty());
+    var discountRow = '';
+    if (cartData.discount.percent > 0) {
+      discountRow = '<div class="cart-summary-row" style="color:#22c55e;">' +
+        '<span>' + cartData.discount.label + '</span><span>-$' + cartData.discountAmount.toFixed(2) + '</span></div>';
+    }
+    var tierRow = '';
+    if (nextTier) {
+      tierRow = '<div class="cart-summary-row" style="font-size:0.8rem;color:var(--accent);padding-top:0;"><span>Add ' + nextTier.needed + ' more vial' + (nextTier.needed > 1 ? 's' : '') + ' for ' + nextTier.percent + '% off</span></div>';
+    }
     summaryEl.innerHTML = '<h4>Order Summary</h4>' +
       '<div class="cart-summary-row">' +
       '<span>Subtotal</span><span>$' + subtotal.toFixed(2) + '</span></div>' +
+      discountRow + tierRow +
       '<div class="cart-summary-row">' +
       '<span>Shipping</span><span>' + (shipping === 0 ? 'Free' : '$' + shipping.toFixed(2)) + '</span></div>' +
       (shipping > 0 ? '<div class="cart-summary-row" style="font-size:0.8rem;color:var(--text-light);padding-top:0;"><span>Free shipping on orders over $150</span></div>' : '') +
