@@ -483,13 +483,15 @@ function showToast(message, type) {
   setTimeout(dismiss, 3000);
 }
 
-function addToCart(name, price, dosage) {
+function addToCart(name, price, dosage, image, slug) {
   var cart = getCart();
   var existing = cart.find(function(item) { return item.name === name; });
   if (existing) {
     existing.qty += 1;
+    if (image && !existing.image) existing.image = image;
+    if (slug && !existing.slug) existing.slug = slug;
   } else {
-    cart.push({ name: name, price: price, dosage: dosage, qty: 1 });
+    cart.push({ name: name, price: price, dosage: dosage, qty: 1, image: image || '', slug: slug || '' });
   }
   saveCart(cart);
   showToast('Added to cart!', 'success');
@@ -633,7 +635,7 @@ function renderCartDrawer() {
 
   footerEl.style.display = '';
 
-  var productImages = {
+  var fallbackImages = {
     'GLP-3 RT': 'vialpics/transGLP3RT.png',
     'BPC-157': 'vialpics/transBPC.png',
     'GHK-Cu': 'vialpics/transGHKCU.png'
@@ -642,7 +644,7 @@ function renderCartDrawer() {
   var html = '';
   cart.forEach(function(item) {
     var lineTotal = (item.price * item.qty).toFixed(2);
-    var imgSrc = productImages[item.name];
+    var imgSrc = item.image ? 'vialpics/' + item.image : fallbackImages[item.name];
     var imgHtml = imgSrc
       ? '<img src="' + imgSrc + '" alt="' + item.name + '">'
       : '<svg viewBox="0 0 60 140" fill="none" style="width:28px;height:auto;"><rect x="15" y="0" width="30" height="8" rx="2" fill="#C8CED6"/><rect x="12" y="8" width="36" height="6" rx="1" fill="#B0B8C1"/><rect x="18" y="14" width="24" height="110" rx="4" fill="#E8EDF2" stroke="#C8CED6" stroke-width="1"/></svg>';
@@ -723,17 +725,21 @@ function renderCartPage() {
   itemsEl.style.display = '';
   if (emptyEl) emptyEl.style.display = 'none';
 
-  // Product data map
-  var productData = {
-    'GLP-3 RT': { link: 'product-glp3rt.html', img: 'vialpics/transGLP3RT.png' },
-    'BPC-157': { link: 'product-bpc157.html', img: 'vialpics/transBPC.png' },
-    'GHK-Cu': { link: 'product-ghkcu.html', img: 'vialpics/transGHKCU.png' },
+  // Fallback product data for old cart items without slug/image
+  var fallbackData = {
+    'GLP-3 RT': { link: 'product.html?slug=glp3rt', img: 'vialpics/transGLP3RT.png' },
+    'BPC-157': { link: 'product.html?slug=bpc157', img: 'vialpics/transBPC.png' },
+    'GHK-Cu': { link: 'product.html?slug=ghkcu', img: 'vialpics/transGHKCU.png' },
   };
 
   var html = '';
   cart.forEach(function(item) {
     var lineTotal = (item.price * item.qty).toFixed(2);
-    var data = productData[item.name] || { link: 'products.html', img: '' };
+    var fallback = fallbackData[item.name] || { link: 'products.html', img: '' };
+    var data = {
+      link: item.slug ? 'product.html?slug=' + item.slug : fallback.link,
+      img: item.image ? 'vialpics/' + item.image : fallback.img
+    };
     var imgHtml = data.img
       ? '<img src="' + data.img + '" alt="' + item.name + '">'
       : '<svg viewBox="0 0 60 140" fill="none" style="width:40px;height:auto;"><rect x="15" y="0" width="30" height="8" rx="2" fill="#C8CED6"/><rect x="12" y="8" width="36" height="6" rx="1" fill="#B0B8C1"/><rect x="18" y="14" width="24" height="110" rx="4" fill="#E8EDF2" stroke="#C8CED6" stroke-width="1"/></svg>';
@@ -1133,14 +1139,16 @@ function getQty() {
   return input ? Math.max(1, parseInt(input.value) || 1) : 1;
 }
 
-function addToCartWithQty(name, price, dosage) {
+function addToCartWithQty(name, price, dosage, image, slug) {
   var qty = getQty();
   var cart = getCart();
   var existing = cart.find(function(item) { return item.name === name; });
   if (existing) {
     existing.qty += qty;
+    if (image && !existing.image) existing.image = image;
+    if (slug && !existing.slug) existing.slug = slug;
   } else {
-    cart.push({ name: name, price: price, dosage: dosage, qty: qty });
+    cart.push({ name: name, price: price, dosage: dosage, qty: qty, image: image || '', slug: slug || '' });
   }
   saveCart(cart);
   showToast('Added to cart!', 'success');

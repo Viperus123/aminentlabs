@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Management — AMINENT LABS</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body.admin-loading .admin-content { display: none; }
+
+    .admin-content { max-width: 1400px; margin: 0 auto; }
+
+    .admin-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .admin-toolbar h1 { font-size: 2rem; font-weight: 300; }
+
+    .btn-add {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.65rem 1.4rem;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius);
+      font-family: inherit;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: opacity var(--transition);
+    }
+    .btn-add:hover { opacity: 0.85; }
+
+    /* Products Table */
+    .products-table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--bg);
+    }
+    .products-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+    }
+    .products-table th,
+    .products-table td {
+      padding: 0.7rem 0.9rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+    .products-table th {
+      font-weight: 600;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-light);
+      background: var(--bg-alt);
+    }
+    .products-table tr:last-child td { border-bottom: none; }
+    .products-table tr:hover td { background: var(--bg-alt); }
+
+    .products-table .product-name { white-space: normal; min-width: 180px; font-weight: 500; }
+    .products-table .badge-cell {
+      display: inline-block;
+      padding: 0.15rem 0.5rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      background: var(--accent);
+      color: #fff;
+    }
+    .status-active { color: #22c55e; }
+    .status-inactive { color: #ef4444; }
+
+    .btn-edit, .btn-delete {
+      padding: 0.3rem 0.7rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--bg);
+      color: var(--text);
+      font-family: inherit;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+    .btn-edit:hover { border-color: var(--accent); color: var(--accent); }
+    .btn-delete { color: #ef4444; border-color: transparent; }
+    .btn-delete:hover { border-color: #ef4444; background: rgba(239,68,68,0.08); }
+
+    /* Modal / Form Overlay */
+    .pm-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      background: rgba(0,0,0,0.55);
+      overflow-y: auto;
+      padding: 2rem;
+    }
+    .pm-overlay.open { display: flex; justify-content: center; align-items: flex-start; }
+
+    .pm-modal {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      width: 100%;
+      max-width: 780px;
+      padding: 2rem;
+      margin: 2rem auto;
+      position: relative;
+    }
+    .pm-modal h2 { font-size: 1.4rem; font-weight: 400; margin-bottom: 1.5rem; }
+
+    .pm-close {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--text-light);
+      padding: 0.25rem;
+    }
+    .pm-close:hover { color: var(--text); }
+    .pm-close svg { width: 20px; height: 20px; stroke: currentColor; stroke-width: 2; fill: none; }
+
+    .pm-form { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .pm-form .full { grid-column: 1 / -1; }
+    .pm-form label {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--text-light);
+      margin-bottom: 0.3rem;
+    }
+    .pm-form input,
+    .pm-form select,
+    .pm-form textarea {
+      width: 100%;
+      padding: 0.6rem 0.8rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      font-family: inherit;
+      font-size: 0.9rem;
+      background: var(--bg);
+      color: var(--text);
+      transition: border-color var(--transition);
+    }
+    .pm-form input:focus,
+    .pm-form select:focus,
+    .pm-form textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+    .pm-form textarea { resize: vertical; min-height: 100px; }
+
+    .pm-form .checkbox-row {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 0.3rem;
+    }
+    .pm-form .checkbox-row input[type="checkbox"] { width: auto; }
+    .pm-form .checkbox-row span { font-size: 0.9rem; color: var(--text); }
+
+    /* Specs Section */
+    .specs-section { margin-top: 0.25rem; }
+    .spec-row {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+    .spec-row input { flex: 1; }
+    .spec-remove {
+      background: none;
+      border: none;
+      color: #ef4444;
+      cursor: pointer;
+      font-size: 1.2rem;
+      padding: 0.25rem;
+      line-height: 1;
+    }
+    .spec-remove:hover { opacity: 0.7; }
+    .btn-add-spec {
+      padding: 0.35rem 0.8rem;
+      background: var(--bg-alt);
+      border: 1px dashed var(--border);
+      border-radius: var(--radius);
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+      transition: all var(--transition);
+    }
+    .btn-add-spec:hover { border-color: var(--accent); color: var(--accent); }
+
+    .pm-actions {
+      grid-column: 1 / -1;
+      display: flex;
+      gap: 0.75rem;
+      margin-top: 0.5rem;
+    }
+    .pm-actions .btn-save {
+      flex: 1;
+      padding: 0.7rem;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius);
+      font-family: inherit;
+      font-size: 0.95rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: opacity var(--transition);
+    }
+    .pm-actions .btn-save:hover { opacity: 0.85; }
+    .pm-actions .btn-save:disabled { opacity: 0.5; cursor: not-allowed; }
+    .pm-actions .btn-cancel {
+      padding: 0.7rem 1.5rem;
+      background: var(--bg);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      font-family: inherit;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+    .pm-actions .btn-cancel:hover { border-color: var(--text-light); }
+
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      padding: 0.8rem 1.4rem;
+      border-radius: var(--radius);
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: #fff;
+      z-index: 2000;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: all 0.3s ease;
+      pointer-events: none;
+    }
+    .toast.show { opacity: 1; transform: translateY(0); }
+    .toast.success { background: #22c55e; }
+    .toast.error { background: #ef4444; }
+
+    @media (max-width: 700px) {
+      .pm-form { grid-template-columns: 1fr; }
+      .pm-form .full { grid-column: 1; }
+      .pm-modal { padding: 1.25rem; }
+    }
+  </style>
+</head>
+<body class="admin-loading">
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="index.html" class="nav-logo">
+        <img src="newaminologo.png" alt="AMINENT LABS">
+      </a>
+      <div class="nav-links" id="navLinks">
+        <a href="products.html">Products</a>
+        <a href="coa.html">COA</a>
+        <a href="about.html">About</a>
+        <a href="faq.html">FAQ</a>
+        <a href="contact.html">Contact</a>
+        <a href="partners.html">Partners</a>
+        <a href="resources.html">Resources</a>
+        <button class="theme-toggle" aria-label="Toggle theme">
+          <svg class="icon-moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+          <svg class="icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        </button>
+      </div>
+      <button class="nav-mobile-toggle" id="navToggle" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <section class="section" style="padding-top:6rem;">
+    <div class="container admin-content">
+
+      <div class="admin-toolbar fade-in">
+        <div>
+          <h1>Product Management</h1>
+          <p id="adminUserInfo" style="color:var(--text-secondary);font-size:0.9rem;margin-top:0.25rem;"></p>
+          <p style="margin-top:0.25rem;"><a href="admin.html" style="color:var(--accent);font-size:0.85rem;">&#8592; Back to Admin Panel</a></p>
+        </div>
+        <button class="btn-add" onclick="openForm()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Add Product
+        </button>
+      </div>
+
+      <div id="productsContainer">
+        <div class="account-loading">Loading products...</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Product Form Modal -->
+  <div class="pm-overlay" id="productOverlay">
+    <div class="pm-modal">
+      <button class="pm-close" onclick="closeForm()">
+        <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+      <h2 id="formTitle">Add Product</h2>
+      <form id="productForm" class="pm-form" onsubmit="saveProduct(event)">
+        <input type="hidden" id="editProductId">
+
+        <div>
+          <label for="pName">Name</label>
+          <input type="text" id="pName" required oninput="autoSlug()">
+        </div>
+        <div>
+          <label for="pShortName">Short Name</label>
+          <input type="text" id="pShortName" required>
+        </div>
+        <div>
+          <label for="pSlug">Slug</label>
+          <input type="text" id="pSlug" required>
+        </div>
+        <div>
+          <label for="pPrice">Price ($)</label>
+          <input type="number" id="pPrice" step="0.01" min="0" required>
+        </div>
+        <div>
+          <label for="pDosage">Dosage</label>
+          <input type="text" id="pDosage" required placeholder="e.g. 10 mg">
+        </div>
+        <div>
+          <label for="pPurity">Purity</label>
+          <input type="text" id="pPurity" value="≥99%">
+        </div>
+        <div>
+          <label for="pFormField">Form</label>
+          <input type="text" id="pFormField" value="Lyophilized powder">
+        </div>
+        <div>
+          <label for="pCategory">Category</label>
+          <select id="pCategory" required>
+            <option value="metabolic">Metabolic</option>
+            <option value="tissue">Tissue</option>
+            <option value="skin">Skin</option>
+          </select>
+        </div>
+        <div>
+          <label for="pImage">Image Filename</label>
+          <input type="text" id="pImage" required placeholder="e.g. transGLP3RT.png">
+        </div>
+        <div>
+          <label for="pBadge">Badge (optional)</label>
+          <input type="text" id="pBadge" placeholder="e.g. Popular, New">
+        </div>
+        <div>
+          <label for="pStorage">Storage</label>
+          <input type="text" id="pStorage" value="Refrigerate (36–46°F). Protect from light.">
+        </div>
+        <div>
+          <label for="pReconstitution">Reconstitution</label>
+          <input type="text" id="pReconstitution" value="Bacteriostatic water">
+        </div>
+        <div class="full">
+          <label for="pSummary">Summary Line</label>
+          <input type="text" id="pSummary" required placeholder="e.g. 10 mg | Lyophilized Powder | RUO Peptide">
+        </div>
+        <div class="full">
+          <label for="pDescription">Description (HTML supported)</label>
+          <textarea id="pDescription" rows="5" required></textarea>
+        </div>
+        <div class="full">
+          <label for="pMetaTitle">Meta Title</label>
+          <input type="text" id="pMetaTitle">
+        </div>
+        <div class="full">
+          <label for="pMetaDesc">Meta Description</label>
+          <textarea id="pMetaDesc" rows="2"></textarea>
+        </div>
+        <div class="full">
+          <label for="pSchemaDesc">Schema Description</label>
+          <textarea id="pSchemaDesc" rows="2"></textarea>
+        </div>
+        <div>
+          <label for="pSortOrder">Sort Order</label>
+          <input type="number" id="pSortOrder" value="0" min="0">
+        </div>
+        <div style="display:flex;gap:2rem;align-items:end;">
+          <div class="checkbox-row">
+            <input type="checkbox" id="pFeatured" checked>
+            <span>Featured</span>
+          </div>
+          <div class="checkbox-row">
+            <input type="checkbox" id="pActive" checked>
+            <span>Active</span>
+          </div>
+        </div>
+
+        <!-- Specs -->
+        <div class="full specs-section">
+          <label>Specifications</label>
+          <div id="specsContainer"></div>
+          <button type="button" class="btn-add-spec" onclick="addSpecRow('', '')">+ Add Spec</button>
+        </div>
+
+        <div class="pm-actions">
+          <button type="submit" class="btn-save" id="btnSave">Save Product</button>
+          <button type="button" class="btn-cancel" onclick="closeForm()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="supabase-config.js"></script>
+  <script src="auth.js"></script>
+  <script src="app.js"></script>
+
+  <script>
+    // ========================================
+    // Admin Auth Check
+    // ========================================
+    var ADMIN_EMAIL = 'support@aminentlabs.com';
+    var allProducts = [];
+    var isEditing = false;
+
+    (async function() {
+      var session = await getSession();
+      if (!session) {
+        window.location.href = 'login.html';
+        return;
+      }
+
+      var user = session.user;
+      if (user.email !== ADMIN_EMAIL) {
+        document.querySelector('.admin-content').innerHTML =
+          '<div style="text-align:center;padding:4rem 0;">' +
+          '<h2>Access Denied</h2>' +
+          '<p style="color:var(--text-secondary);margin-top:0.5rem;">You do not have admin privileges.</p>' +
+          '<a href="account.html" class="btn btn-primary" style="margin-top:1.5rem;">Go to My Account</a></div>';
+        document.body.classList.remove('admin-loading');
+        return;
+      }
+
+      document.getElementById('adminUserInfo').textContent = 'Logged in as ' + user.email;
+      document.body.classList.remove('admin-loading');
+      loadProducts();
+    })();
+
+    // ========================================
+    // Load Products
+    // ========================================
+    async function loadProducts() {
+      var container = document.getElementById('productsContainer');
+
+      // Admin RLS policy grants full access so we can read all rows including inactive
+      var { data, error } = await supabase
+        .from('products')
+        .select('*')
+        .order('sort_order', { ascending: true });
+
+      if (error) {
+        container.innerHTML = '<div class="account-empty"><p>Error loading products: ' + error.message + '</p></div>';
+        return;
+      }
+
+      allProducts = data || [];
+      renderProducts();
+    }
+
+    function renderProducts() {
+      var container = document.getElementById('productsContainer');
+
+      if (allProducts.length === 0) {
+        container.innerHTML = '<div class="account-empty" style="text-align:center;padding:3rem;"><p>No products yet. Click "Add Product" to create one.</p></div>';
+        return;
+      }
+
+      var html = '<div class="products-table-wrap"><table class="products-table"><thead><tr>' +
+        '<th>#</th><th>Image</th><th>Name</th><th>Price</th><th>Category</th><th>Badge</th><th>Status</th><th>Featured</th><th>Actions</th>' +
+        '</tr></thead><tbody>';
+
+      allProducts.forEach(function(p) {
+        var statusHtml = p.is_active
+          ? '<span class="status-active">Active</span>'
+          : '<span class="status-inactive">Inactive</span>';
+        var featuredHtml = p.is_featured ? 'Yes' : '—';
+        var badgeHtml = p.badge ? '<span class="badge-cell">' + escapeHtml(p.badge) + '</span>' : '—';
+
+        html += '<tr>' +
+          '<td>' + (p.sort_order || 0) + '</td>' +
+          '<td><img src="' + escapeHtml(p.image_filename) + '" alt="" style="width:40px;height:40px;object-fit:contain;border-radius:4px;background:var(--bg-alt);"></td>' +
+          '<td class="product-name">' + escapeHtml(p.name) + '<br><span style="font-size:0.78rem;color:var(--text-light);">/' + escapeHtml(p.slug) + '</span></td>' +
+          '<td>$' + parseFloat(p.price).toFixed(2) + '</td>' +
+          '<td>' + escapeHtml(p.category) + '</td>' +
+          '<td>' + badgeHtml + '</td>' +
+          '<td>' + statusHtml + '</td>' +
+          '<td>' + featuredHtml + '</td>' +
+          '<td style="white-space:nowrap;">' +
+            '<button class="btn-edit" onclick="editProduct(\'' + p.id + '\')">Edit</button> ' +
+            '<button class="btn-delete" onclick="deleteProduct(\'' + p.id + '\', \'' + escapeHtml(p.name).replace(/'/g, "\\'") + '\')">Delete</button>' +
+          '</td>' +
+          '</tr>';
+      });
+
+      html += '</tbody></table></div>';
+      container.innerHTML = html;
+    }
+
+    // ========================================
+    // Form Open / Close
+    // ========================================
+    function openForm() {
+      isEditing = false;
+      document.getElementById('formTitle').textContent = 'Add Product';
+      document.getElementById('btnSave').textContent = 'Create Product';
+      document.getElementById('productForm').reset();
+      document.getElementById('editProductId').value = '';
+      document.getElementById('pPurity').value = '≥99%';
+      document.getElementById('pFormField').value = 'Lyophilized powder';
+      document.getElementById('pStorage').value = 'Refrigerate (36–46°F). Protect from light.';
+      document.getElementById('pReconstitution').value = 'Bacteriostatic water';
+      document.getElementById('pFeatured').checked = true;
+      document.getElementById('pActive').checked = true;
+      document.getElementById('pSortOrder').value = '0';
+      document.getElementById('specsContainer').innerHTML = '';
+      addSpecRow('', '');
+      document.getElementById('productOverlay').classList.add('open');
+    }
+
+    function closeForm() {
+      document.getElementById('productOverlay').classList.remove('open');
+    }
+
+    function editProduct(id) {
+      var p = allProducts.find(function(x) { return x.id === id; });
+      if (!p) return;
+
+      isEditing = true;
+      document.getElementById('formTitle').textContent = 'Edit Product';
+      document.getElementById('btnSave').textContent = 'Update Product';
+      document.getElementById('editProductId').value = p.id;
+
+      document.getElementById('pName').value = p.name || '';
+      document.getElementById('pShortName').value = p.short_name || '';
+      document.getElementById('pSlug').value = p.slug || '';
+      document.getElementById('pPrice').value = p.price || '';
+      document.getElementById('pDosage').value = p.dosage || '';
+      document.getElementById('pPurity').value = p.purity || '';
+      document.getElementById('pFormField').value = p.form || '';
+      document.getElementById('pCategory').value = p.category || 'metabolic';
+      document.getElementById('pImage').value = p.image_filename || '';
+      document.getElementById('pBadge').value = p.badge || '';
+      document.getElementById('pStorage').value = p.storage || '';
+      document.getElementById('pReconstitution').value = p.reconstitution || '';
+      document.getElementById('pSummary').value = p.summary || '';
+      document.getElementById('pDescription').value = p.description || '';
+      document.getElementById('pMetaTitle').value = p.meta_title || '';
+      document.getElementById('pMetaDesc').value = p.meta_description || '';
+      document.getElementById('pSchemaDesc').value = p.schema_description || '';
+      document.getElementById('pSortOrder').value = p.sort_order || 0;
+      document.getElementById('pFeatured').checked = !!p.is_featured;
+      document.getElementById('pActive').checked = !!p.is_active;
+
+      // Specs
+      document.getElementById('specsContainer').innerHTML = '';
+      var specs = p.specs || [];
+      if (specs.length === 0) {
+        addSpecRow('', '');
+      } else {
+        specs.forEach(function(s) {
+          addSpecRow(s.label || '', s.value || '');
+        });
+      }
+
+      document.getElementById('productOverlay').classList.add('open');
+    }
+
+    // ========================================
+    // Slug auto-generation
+    // ========================================
+    function autoSlug() {
+      if (isEditing) return;
+      var name = document.getElementById('pName').value;
+      var slug = name.toLowerCase()
+        .replace(/[^a-z0-9]+/g, '')
+        .replace(/-+/g, '-')
+        .replace(/^-|-$/g, '');
+      document.getElementById('pSlug').value = slug;
+    }
+
+    // ========================================
+    // Specs Management
+    // ========================================
+    function addSpecRow(label, value) {
+      var container = document.getElementById('specsContainer');
+      var row = document.createElement('div');
+      row.className = 'spec-row';
+      row.innerHTML =
+        '<input type="text" placeholder="Label" value="' + escapeAttr(label) + '">' +
+        '<input type="text" placeholder="Value" value="' + escapeAttr(value) + '">' +
+        '<button type="button" class="spec-remove" onclick="this.parentElement.remove()" title="Remove">&times;</button>';
+      container.appendChild(row);
+    }
+
+    function getSpecs() {
+      var rows = document.querySelectorAll('#specsContainer .spec-row');
+      var specs = [];
+      rows.forEach(function(row) {
+        var inputs = row.querySelectorAll('input');
+        var label = inputs[0].value.trim();
+        var value = inputs[1].value.trim();
+        if (label || value) {
+          specs.push({ label: label, value: value });
+        }
+      });
+      return specs;
+    }
+
+    // ========================================
+    // Save Product
+    // ========================================
+    async function saveProduct(e) {
+      e.preventDefault();
+      var btn = document.getElementById('btnSave');
+      btn.disabled = true;
+      btn.textContent = 'Saving...';
+
+      var productData = {
+        name: document.getElementById('pName').value.trim(),
+        short_name: document.getElementById('pShortName').value.trim(),
+        slug: document.getElementById('pSlug').value.trim(),
+        price: parseFloat(document.getElementById('pPrice').value),
+        dosage: document.getElementById('pDosage').value.trim(),
+        purity: document.getElementById('pPurity').value.trim(),
+        form: document.getElementById('pFormField').value.trim(),
+        category: document.getElementById('pCategory').value,
+        image_filename: document.getElementById('pImage').value.trim(),
+        badge: document.getElementById('pBadge').value.trim() || null,
+        storage: document.getElementById('pStorage').value.trim(),
+        reconstitution: document.getElementById('pReconstitution').value.trim(),
+        summary: document.getElementById('pSummary').value.trim(),
+        description: document.getElementById('pDescription').value.trim(),
+        meta_title: document.getElementById('pMetaTitle').value.trim() || null,
+        meta_description: document.getElementById('pMetaDesc').value.trim() || null,
+        schema_description: document.getElementById('pSchemaDesc').value.trim() || null,
+        sort_order: parseInt(document.getElementById('pSortOrder').value) || 0,
+        is_featured: document.getElementById('pFeatured').checked,
+        is_active: document.getElementById('pActive').checked,
+        specs: getSpecs()
+      };
+
+      var editId = document.getElementById('editProductId').value;
+      var result;
+
+      if (editId) {
+        productData.updated_at = new Date().toISOString();
+        result = await supabase.from('products').update(productData).eq('id', editId);
+      } else {
+        result = await supabase.from('products').insert(productData);
+      }
+
+      btn.disabled = false;
+      btn.textContent = editId ? 'Update Product' : 'Create Product';
+
+      if (result.error) {
+        showToast('Error: ' + result.error.message, 'error');
+        return;
+      }
+
+      showToast(editId ? 'Product updated!' : 'Product created!', 'success');
+      closeForm();
+      loadProducts();
+    }
+
+    // ========================================
+    // Delete Product
+    // ========================================
+    async function deleteProduct(id, name) {
+      if (!confirm('Are you sure you want to delete "' + name + '"? This cannot be undone.')) return;
+
+      var { error } = await supabase.from('products').delete().eq('id', id);
+
+      if (error) {
+        showToast('Error deleting: ' + error.message, 'error');
+        return;
+      }
+
+      showToast('Product deleted.', 'success');
+      loadProducts();
+    }
+
+    // ========================================
+    // Utilities
+    // ========================================
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    function escapeAttr(str) {
+      if (!str) return '';
+      return String(str).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    function showToast(msg, type) {
+      var toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.className = 'toast ' + (type || 'success') + ' show';
+      setTimeout(function() { toast.classList.remove('show'); }, 3000);
+    }
+
+    // Close modal on overlay click
+    document.getElementById('productOverlay').addEventListener('click', function(e) {
+      if (e.target === this) closeForm();
+    });
+
+    // Close modal on Escape key
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') closeForm();
+    });
+  </script>
+
+</body>
+</html>
