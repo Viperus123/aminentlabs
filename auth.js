@@ -406,19 +406,15 @@ function sendShippingNotification(email, orderId, trackingNumber, carrier) {
 }
 
 function sendEmail(to, subject, body) {
-  // Uses Formsubmit.co for email delivery (same as contact form)
-  var formData = new FormData();
-  formData.append('email', to);
-  formData.append('_subject', subject);
-  formData.append('message', body);
-  formData.append('_template', 'box');
-
-  fetch('https://formsubmit.co/ajax/' + to, {
-    method: 'POST',
-    headers: { 'Accept': 'application/json' },
-    body: formData
-  }).catch(function(err) {
-    console.log('Email send failed:', err);
+  // Store email notification in Supabase for processing
+  // Actual email delivery should be handled by a Supabase Edge Function or webhook
+  supabase.from('contact_submissions').insert([{
+    name: 'System Notification',
+    email: to,
+    subject: subject,
+    message: body
+  }]).catch(function(err) {
+    console.log('Email notification save failed:', err);
   });
 }
 
