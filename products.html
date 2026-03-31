@@ -4,12 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Products — AMINENT LABS</title>
-  <meta name="description" content="Browse our catalog of research-grade peptides. HPLC tested, COA available.">
+  <meta name="description" content="Browse our catalog of research-grade peptides. ≥99% purity verified, COA available for every batch.">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16.png">
   <link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png">
   <meta property="og:title" content="Research Peptides — AMINENT LABS">
-  <meta property="og:description" content="Browse our catalog of research-grade peptides. HPLC tested, COA available.">
+  <meta property="og:description" content="Browse our catalog of research-grade peptides. ≥99% purity verified, COA available for every batch.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600&display=swap" rel="stylesheet">
@@ -105,127 +105,209 @@
         </div>
       </div>
 
+      <!-- Bulk Discount Banner -->
+      <div class="bulk-discount-banner fade-in">
+        <svg viewBox="0 0 24 24" style="width:20px;height:20px;stroke:currentColor;stroke-width:1.5;fill:none;flex-shrink:0;"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+        <span><strong>Bulk Discounts:</strong> 3+ vials 10% off &middot; 6+ vials 15% off &middot; 10+ vials 20% off</span>
+      </div>
+
       <div class="grid-3">
 
-        <a href="product-glp3rt.html" class="product-card fade-in fade-in-delay-1" data-name="GLP-3 RT Retatrutide" data-category="metabolic">
-          <div class="product-card-img">
-            <span class="product-card-badge">Popular</span>
-            <img loading="lazy" src="vialpics/transGLP3RT.png" alt="GLP-3 RT Retatrutide 10mg research peptide vial" width="400" height="400">
-          </div>
-          <div class="product-card-body">
-            <div class="product-card-name">GLP-3 RT (Retatrutide)</div>
-            <div class="product-card-meta">10 mg · Lyophilized · RUO Peptide</div>
-            <div class="product-card-purity">≥99% Purity</div>
-            <div class="product-card-desc">Triple agonist peptide targeting GLP-1, GIP, and glucagon receptors for metabolic research.</div>
-            <div class="product-card-footer">
-              <span class="product-card-price" data-base-price="68.00">$68.00</span>
-              <button class="btn-cart btn-sm" data-name="GLP-3 RT" onclick="event.preventDefault();addToCart('GLP-3 RT',68,'10 mg')">
+        <div class="product-card fade-in fade-in-delay-1" data-name="GLP-3 RT Retatrutide" data-category="metabolic">
+          <a href="product-glp3rt.html" class="product-card-link">
+            <div class="product-card-img">
+              <span class="product-card-badge">Popular</span>
+              <img loading="lazy" src="vialpics/transGLP3RT.png" alt="GLP-3 RT Retatrutide 10mg research peptide vial" width="400" height="400">
+            </div>
+            <div class="product-card-body">
+              <div class="product-card-name">GLP-3 RT (Retatrutide)</div>
+              <div class="product-card-meta">10 mg · Lyophilized · RUO Peptide</div>
+              <div class="product-card-tags">
+                <span class="product-card-purity">≥99% Purity</span>
+                <span class="product-card-stock">In Stock</span>
+              </div>
+              <div class="product-card-desc">Triple agonist peptide targeting GLP-1, GIP, and glucagon receptors for metabolic research.</div>
+            </div>
+          </a>
+          <div class="product-card-actions">
+            <div class="product-card-price-row">
+              <span class="product-card-price" data-base-price="68.00">From $68.00</span>
+              <span class="product-card-view">View Details &rarr;</span>
+            </div>
+            <div class="product-card-cart-row">
+              <div class="product-card-qty">
+                <button class="qty-btn qty-minus" onclick="event.preventDefault();changeCardQty(this,-1)" aria-label="Decrease quantity">−</button>
+                <input type="number" class="qty-input" value="1" min="1" max="10" onclick="event.preventDefault()">
+                <button class="qty-btn qty-plus" onclick="event.preventDefault();changeCardQty(this,1)" aria-label="Increase quantity">+</button>
+              </div>
+              <button class="btn-cart btn-sm" data-name="GLP-3 RT" onclick="event.preventDefault();addToCartFromCard(this,'GLP-3 RT',68,'10 mg')">
                 <svg viewBox="0 0 24 24"><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg> Add
               </button>
             </div>
           </div>
-        </a>
+        </div>
 
-        <a href="product-bpc157.html" class="product-card fade-in fade-in-delay-2" data-name="BPC-157" data-category="tissue">
-          <div class="product-card-img">
-            <img loading="lazy" src="vialpics/transBPC.png" alt="BPC-157 Body Protection Compound 10mg research peptide vial" width="400" height="400">
-          </div>
-          <div class="product-card-body">
-            <div class="product-card-name">BPC-157</div>
-            <div class="product-card-meta">10 mg · Lyophilized · RUO Peptide</div>
-            <div class="product-card-purity">≥99% Purity</div>
-            <div class="product-card-desc">Body Protection Compound-157, a pentadecapeptide for tissue research applications.</div>
-            <div class="product-card-footer">
-              <span class="product-card-price" data-base-price="42.00">$42.00</span>
-              <button class="btn-cart btn-sm" data-name="BPC-157" onclick="event.preventDefault();addToCart('BPC-157',42,'10 mg')">
+        <div class="product-card fade-in fade-in-delay-2" data-name="BPC-157" data-category="tissue">
+          <a href="product-bpc157.html" class="product-card-link">
+            <div class="product-card-img">
+              <img loading="lazy" src="vialpics/transBPC.png" alt="BPC-157 Body Protection Compound 10mg research peptide vial" width="400" height="400">
+            </div>
+            <div class="product-card-body">
+              <div class="product-card-name">BPC-157</div>
+              <div class="product-card-meta">10 mg · Lyophilized · RUO Peptide</div>
+              <div class="product-card-tags">
+                <span class="product-card-purity">≥99% Purity</span>
+                <span class="product-card-stock">In Stock</span>
+              </div>
+              <div class="product-card-desc">Body Protection Compound-157, a pentadecapeptide for tissue research applications.</div>
+            </div>
+          </a>
+          <div class="product-card-actions">
+            <div class="product-card-price-row">
+              <span class="product-card-price" data-base-price="42.00">From $42.00</span>
+              <span class="product-card-view">View Details &rarr;</span>
+            </div>
+            <div class="product-card-cart-row">
+              <div class="product-card-qty">
+                <button class="qty-btn qty-minus" onclick="event.preventDefault();changeCardQty(this,-1)" aria-label="Decrease quantity">−</button>
+                <input type="number" class="qty-input" value="1" min="1" max="10" onclick="event.preventDefault()">
+                <button class="qty-btn qty-plus" onclick="event.preventDefault();changeCardQty(this,1)" aria-label="Increase quantity">+</button>
+              </div>
+              <button class="btn-cart btn-sm" data-name="BPC-157" onclick="event.preventDefault();addToCartFromCard(this,'BPC-157',42,'10 mg')">
                 <svg viewBox="0 0 24 24"><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg> Add
               </button>
             </div>
           </div>
-        </a>
+        </div>
 
-        <a href="product-ghkcu.html" class="product-card fade-in fade-in-delay-2" data-name="GHK-Cu" data-category="tissue">
-          <div class="product-card-img">
-            <img loading="lazy" src="vialpics/transGHKCU.png" alt="GHK-Cu Copper Peptide 50mg research peptide vial" width="400" height="400">
-          </div>
-          <div class="product-card-body">
-            <div class="product-card-name">GHK-Cu</div>
-            <div class="product-card-meta">50 mg · Lyophilized · RUO Peptide</div>
-            <div class="product-card-purity">≥99% Purity</div>
-            <div class="product-card-desc">Copper peptide complex studied for its role in tissue remodeling and cellular signaling.</div>
-            <div class="product-card-footer">
-              <span class="product-card-price" data-base-price="38.00">$38.00</span>
-              <button class="btn-cart btn-sm" data-name="GHK-Cu" onclick="event.preventDefault();addToCart('GHK-Cu',38,'50 mg')">
+        <div class="product-card fade-in fade-in-delay-2" data-name="GHK-Cu" data-category="tissue">
+          <a href="product-ghkcu.html" class="product-card-link">
+            <div class="product-card-img">
+              <img loading="lazy" src="vialpics/transGHKCU.png" alt="GHK-Cu Copper Peptide 50mg research peptide vial" width="400" height="400">
+            </div>
+            <div class="product-card-body">
+              <div class="product-card-name">GHK-Cu</div>
+              <div class="product-card-meta">50 mg · Lyophilized · RUO Peptide</div>
+              <div class="product-card-tags">
+                <span class="product-card-purity">≥99% Purity</span>
+                <span class="product-card-stock">In Stock</span>
+              </div>
+              <div class="product-card-desc">Copper peptide complex studied for its role in tissue remodeling and cellular signaling.</div>
+            </div>
+          </a>
+          <div class="product-card-actions">
+            <div class="product-card-price-row">
+              <span class="product-card-price" data-base-price="38.00">From $38.00</span>
+              <span class="product-card-view">View Details &rarr;</span>
+            </div>
+            <div class="product-card-cart-row">
+              <div class="product-card-qty">
+                <button class="qty-btn qty-minus" onclick="event.preventDefault();changeCardQty(this,-1)" aria-label="Decrease quantity">−</button>
+                <input type="number" class="qty-input" value="1" min="1" max="10" onclick="event.preventDefault()">
+                <button class="qty-btn qty-plus" onclick="event.preventDefault();changeCardQty(this,1)" aria-label="Increase quantity">+</button>
+              </div>
+              <button class="btn-cart btn-sm" data-name="GHK-Cu" onclick="event.preventDefault();addToCartFromCard(this,'GHK-Cu',38,'50 mg')">
                 <svg viewBox="0 0 24 24"><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg> Add
               </button>
             </div>
           </div>
-        </a>
+        </div>
 
 
+      </div>
+
+      <!-- No Results Message -->
+      <div class="products-no-results" id="noResults" style="display:none;">
+        <svg viewBox="0 0 24 24" style="width:48px;height:48px;stroke:var(--text-light);stroke-width:1.5;fill:none;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <p>No peptides match your search.</p>
+        <button class="btn-secondary btn-sm" onclick="document.getElementById('productSearch').value='';document.querySelector('.filter-tag[data-filter=all]').click();">Clear filters</button>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Why Aminent Labs -->
+  <section class="trust-section">
+    <div class="container">
+      <div class="trust-grid">
+        <div class="trust-item">
+          <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <h3>Purity Guaranteed</h3>
+          <p>Every peptide verified at ≥99% purity with full Certificate of Analysis available for download.</p>
+        </div>
+        <div class="trust-item">
+          <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+          <h3>Research-Grade Quality</h3>
+          <p>Lyophilized under strict laboratory conditions for maximum stability and shelf life.</p>
+        </div>
+        <div class="trust-item">
+          <svg viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+          <h3>Free Shipping $150+</h3>
+          <p>Fast, discreet shipping on every order. Free shipping automatically applied at $150+.</p>
+        </div>
       </div>
     </div>
   </section>
 
   <!-- Product Comparison -->
-  <section style="padding:4rem 0;background:var(--bg-alt);">
+  <section class="compare-section">
     <div class="container">
-      <div style="text-align:center;margin-bottom:2.5rem;">
-        <h2 style="font-size:1.75rem;font-weight:600;color:var(--text);margin:0 0 0.5rem;">Compare Our Peptides</h2>
-        <p style="color:var(--text);opacity:0.7;margin:0;font-size:0.95rem;">Side-by-side specifications for every product in our catalog.</p>
+      <div class="compare-header">
+        <h2>Compare Our Peptides</h2>
+        <p>Side-by-side specifications for every product in our catalog.</p>
       </div>
-      <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;">
-        <table class="compare-table" style="width:100%;border-collapse:collapse;min-width:640px;font-size:0.9rem;">
+      <div class="compare-scroll">
+        <table class="compare-table">
           <thead>
             <tr>
-              <th style="text-align:left;padding:0.85rem 1rem;border-bottom:2px solid var(--border);color:var(--text);opacity:0.6;font-weight:500;font-size:0.8rem;text-transform:uppercase;letter-spacing:0.04em;">Feature</th>
-              <th style="text-align:center;padding:0.85rem 1rem;border-bottom:2px solid var(--border);color:var(--accent);font-weight:600;">GLP-3 RT (Retatrutide)</th>
-              <th style="text-align:center;padding:0.85rem 1rem;border-bottom:2px solid var(--border);color:var(--accent);font-weight:600;">BPC-157</th>
-              <th style="text-align:center;padding:0.85rem 1rem;border-bottom:2px solid var(--border);color:var(--accent);font-weight:600;">GHK-Cu</th>
+              <th class="compare-th compare-th-label">Feature</th>
+              <th class="compare-th compare-th-product">GLP-3 RT (Retatrutide)</th>
+              <th class="compare-th compare-th-product">BPC-157</th>
+              <th class="compare-th compare-th-product">GHK-Cu</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td style="padding:0.75rem 1rem;border-bottom:1px solid var(--border);color:var(--text);font-weight:500;">Price</td>
-              <td style="padding:0.75rem 1rem;border-bottom:1px solid var(--border);color:var(--text);text-align:center;">$68.00</td>
-              <td style="padding:0.75rem 1rem;border-bottom:1px solid var(--border);color:var(--text);text-align:center;">$42.00</td>
-              <td style="padding:0.75rem 1rem;border-bottom:1px solid var(--border);color:var(--text);text-align:center;">$38.00</td>
+              <td class="compare-td compare-td-label">Price</td>
+              <td class="compare-td">$68.00</td>
+              <td class="compare-td">$42.00</td>
+              <td class="compare-td">$38.00</td>
             </tr>
             <tr>
-              <td style="padding:0.75rem 1rem;border-bottom:1px solid var(--border);color:var(--text);font-weight:500;">Quantity</td>
-              <td style="padding:0.75rem 1rem;border-bottom:1px solid var(--border);color:var(--text);text-align:center;">10mg</td>
-              <td style="padding:0.75rem 1rem;border-bottom:1px solid var(--border);color:var(--text);text-align:center;">5mg</td>
-              <td style="padding:0.75rem 1rem;border-bottom:1px solid var(--border);color:var(--text);text-align:center;">50mg</td>
+              <td class="compare-td compare-td-label">Quantity</td>
+              <td class="compare-td">10mg</td>
+              <td class="compare-td">10mg</td>
+              <td class="compare-td">50mg</td>
             </tr>
             <tr>
-              <td style="padding:0.75rem 1rem;border-bottom:1px solid var(--border);color:var(--text);font-weight:500;">Purity</td>
-              <td style="padding:0.75rem 1rem;border-bottom:1px solid var(--border);color:var(--accent);text-align:center;font-weight:500;">&ge;99%</td>
-              <td style="padding:0.75rem 1rem;border-bottom:1px solid var(--border);color:var(--accent);text-align:center;font-weight:500;">&ge;99%</td>
-              <td style="padding:0.75rem 1rem;border-bottom:1px solid var(--border);color:var(--accent);text-align:center;font-weight:500;">&ge;99%</td>
+              <td class="compare-td compare-td-label">Purity</td>
+              <td class="compare-td compare-td-accent">&ge;99%</td>
+              <td class="compare-td compare-td-accent">&ge;99%</td>
+              <td class="compare-td compare-td-accent">&ge;99%</td>
             </tr>
             <tr>
-              <td style="padding:0.75rem 1rem;border-bottom:1px solid var(--border);color:var(--text);font-weight:500;">Form</td>
-              <td style="padding:0.75rem 1rem;border-bottom:1px solid var(--border);color:var(--text);text-align:center;">Lyophilized Powder</td>
-              <td style="padding:0.75rem 1rem;border-bottom:1px solid var(--border);color:var(--text);text-align:center;">Lyophilized Powder</td>
-              <td style="padding:0.75rem 1rem;border-bottom:1px solid var(--border);color:var(--text);text-align:center;">Lyophilized Powder</td>
+              <td class="compare-td compare-td-label">Form</td>
+              <td class="compare-td">Lyophilized Powder</td>
+              <td class="compare-td">Lyophilized Powder</td>
+              <td class="compare-td">Lyophilized Powder</td>
             </tr>
             <tr>
-              <td style="padding:0.75rem 1rem;border-bottom:1px solid var(--border);color:var(--text);font-weight:500;">Research Area</td>
-              <td style="padding:0.75rem 1rem;border-bottom:1px solid var(--border);color:var(--text);text-align:center;">Metabolic / GLP-1</td>
-              <td style="padding:0.75rem 1rem;border-bottom:1px solid var(--border);color:var(--text);text-align:center;">Tissue Repair</td>
-              <td style="padding:0.75rem 1rem;border-bottom:1px solid var(--border);color:var(--text);text-align:center;">Skin / Antioxidant</td>
+              <td class="compare-td compare-td-label">Research Area</td>
+              <td class="compare-td">Metabolic / GLP-1</td>
+              <td class="compare-td">Tissue Repair</td>
+              <td class="compare-td">Skin / Antioxidant</td>
             </tr>
             <tr>
-              <td style="padding:0.75rem 1rem;border-bottom:1px solid var(--border);color:var(--text);font-weight:500;">COA</td>
-              <td style="padding:0.75rem 1rem;border-bottom:1px solid var(--border);color:var(--accent);text-align:center;font-weight:500;">Available</td>
-              <td style="padding:0.75rem 1rem;border-bottom:1px solid var(--border);color:var(--accent);text-align:center;font-weight:500;">Available</td>
-              <td style="padding:0.75rem 1rem;border-bottom:1px solid var(--border);color:var(--accent);text-align:center;font-weight:500;">Available</td>
+              <td class="compare-td compare-td-label">COA</td>
+              <td class="compare-td compare-td-accent">Available</td>
+              <td class="compare-td compare-td-accent">Available</td>
+              <td class="compare-td compare-td-accent">Available</td>
             </tr>
             <tr>
-              <td style="padding:0.75rem 1rem;color:var(--text);font-weight:500;"></td>
-              <td style="padding:0.75rem 1rem;text-align:center;"><a href="product-glp3rt.html" style="color:var(--accent);text-decoration:none;font-weight:500;">View Details &rarr;</a></td>
-              <td style="padding:0.75rem 1rem;text-align:center;"><a href="product-bpc157.html" style="color:var(--accent);text-decoration:none;font-weight:500;">View Details &rarr;</a></td>
-              <td style="padding:0.75rem 1rem;text-align:center;"><a href="product-ghkcu.html" style="color:var(--accent);text-decoration:none;font-weight:500;">View Details &rarr;</a></td>
+              <td class="compare-td compare-td-label"></td>
+              <td class="compare-td"><a href="product-glp3rt.html" class="compare-link">View Details &rarr;</a></td>
+              <td class="compare-td"><a href="product-bpc157.html" class="compare-link">View Details &rarr;</a></td>
+              <td class="compare-td"><a href="product-ghkcu.html" class="compare-link">View Details &rarr;</a></td>
             </tr>
           </tbody>
         </table>

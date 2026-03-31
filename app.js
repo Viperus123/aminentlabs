@@ -322,13 +322,18 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   function filterProducts(query, category) {
+    var visibleCount = 0;
     productCards.forEach(function(card) {
       var name = (card.getAttribute('data-name') || '').toLowerCase();
       var cat = (card.getAttribute('data-category') || '').toLowerCase();
       var matchQuery = !query || name.includes(query);
       var matchCat = !category || category === 'all' || cat === category;
-      card.style.display = (matchQuery && matchCat) ? '' : 'none';
+      var visible = matchQuery && matchCat;
+      card.style.display = visible ? '' : 'none';
+      if (visible) visibleCount++;
     });
+    var noResults = document.getElementById('noResults');
+    if (noResults) noResults.style.display = visibleCount === 0 ? '' : 'none';
   }
 
   // --- Cart Drawer ---
@@ -510,6 +515,43 @@ function addToCart(name, price, dosage, image, slug) {
       }, 1200);
     }
   });
+}
+
+function changeCardQty(btn, delta) {
+  var row = btn.closest('.product-card-qty');
+  var input = row.querySelector('.qty-input');
+  var val = parseInt(input.value) || 1;
+  val = Math.max(1, Math.min(10, val + delta));
+  input.value = val;
+}
+
+function addToCartFromCard(btn, name, price, dosage, image, slug) {
+  var card = btn.closest('.product-card');
+  var input = card.querySelector('.qty-input');
+  var qty = parseInt(input.value) || 1;
+  var cart = getCart();
+  var existing = cart.find(function(item) { return item.name === name; });
+  if (existing) {
+    existing.qty += qty;
+    if (image && !existing.image) existing.image = image;
+    if (slug && !existing.slug) existing.slug = slug;
+  } else {
+    cart.push({ name: name, price: price, dosage: dosage, qty: qty, image: image || '', slug: slug || '' });
+  }
+  saveCart(cart);
+  showToast(qty + 'x ' + name + ' added to cart!', 'success');
+  openCartDrawer();
+
+  // Visual feedback on button
+  var orig = btn.innerHTML;
+  btn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4"/></svg> Added!';
+  btn.style.background = '#2E7D32';
+  setTimeout(function() {
+    btn.innerHTML = orig;
+    btn.style.background = '';
+  }, 1200);
+  // Reset qty
+  input.value = 1;
 }
 
 function updateQty(name, delta) {
