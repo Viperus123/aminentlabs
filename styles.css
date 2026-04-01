@@ -1469,8 +1469,8 @@ html[data-theme="dark"] .product-card:hover .product-card-img {
 /* --- Scroll Animations --- */
 .fade-in {
   opacity: 0;
-  transform: translateY(24px);
-  transition: opacity 0.7s ease, transform 0.7s ease;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
 }
 
 .fade-in.visible {
@@ -6904,3 +6904,268 @@ button:disabled {
 .compare-link:hover {
   opacity: 0.8;
 }
+
+/* ========================================
+   Hero & Card Visual Polish
+   ======================================== */
+
+/* Hero vial floating animation */
+.hero-vial-img {
+  animation: heroFloat 6s ease-in-out infinite;
+}
+@keyframes heroFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+
+/* Hero vial glow pulse */
+.hero-vial-glow {
+  position: absolute;
+  width: 280px;
+  height: 280px;
+  background: radial-gradient(circle, rgba(37,99,235,0.15) 0%, transparent 70%);
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation: glowPulse 4s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+@keyframes glowPulse {
+  0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
+  50% { opacity: 1; transform: translate(-50%, -50%) scale(1.15); }
+}
+.hero-split-img {
+  position: relative;
+}
+
+/* Product card hover image zoom */
+.product-card-img img {
+  transition: transform 0.4s ease;
+}
+.product-card:hover .product-card-img img {
+  transform: scale(1.05);
+}
+.product-card-img {
+  overflow: hidden;
+}
+
+/* Product card hover lift */
+.product-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.product-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.1);
+}
+[data-theme="dark"] .product-card:hover {
+  box-shadow: 0 12px 32px rgba(0,0,0,0.3);
+}
+
+/* Purity badge on product cards */
+.product-card-purity {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #16a34a;
+  background: rgba(22,163,74,0.08);
+  border: 1px solid rgba(22,163,74,0.15);
+  padding: 0.15rem 0.5rem;
+  border-radius: 100px;
+  margin-left: 0.5rem;
+}
+
+/* ========================================
+   Feature Cards & Testimonials Polish
+   ======================================== */
+
+.feature-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  position: relative;
+}
+.feature-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(37,99,235,0.08);
+  border-color: rgba(37,99,235,0.2);
+}
+.feature-card .feature-icon svg {
+  transition: transform 0.3s ease;
+}
+.feature-card:hover .feature-icon svg {
+  transform: scale(1.1);
+}
+.feature-icon {
+  background: linear-gradient(135deg, rgba(37,99,235,0.08), rgba(124,58,237,0.08));
+  border: 1px solid rgba(37,99,235,0.1);
+}
+
+.why-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.why-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+}
+[data-theme="dark"] .why-card:hover {
+  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+}
+.why-icon svg {
+  transition: transform 0.3s ease;
+}
+.why-card:hover .why-icon svg {
+  transform: scale(1.1);
+}
+
+.testimonial-card {
+  position: relative;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.testimonial-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+}
+[data-theme="dark"] .testimonial-card:hover {
+  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+}
+.testimonial-card::before {
+  content: '\201C';
+  position: absolute;
+  top: 1rem;
+  right: 1.5rem;
+  font-size: 4rem;
+  font-weight: 700;
+  line-height: 1;
+  background: linear-gradient(135deg, var(--accent), #7c3aed);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  opacity: 0.15;
+  pointer-events: none;
+}
+.testimonial-stars {
+  background: linear-gradient(90deg, #f59e0b, #f97316);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.testimonial-avatar {
+  background: linear-gradient(135deg, var(--accent), #7c3aed);
+  color: #fff;
+}
+
+.step-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.step-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+}
+[data-theme="dark"] .step-card:hover {
+  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+}
+.step-number {
+  background: linear-gradient(135deg, var(--accent), #7c3aed);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ========================================
+   CTA Visual Depth & Micro-interactions
+   ======================================== */
+
+.cta-section {
+  position: relative;
+  overflow: hidden;
+}
+.cta-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+}
+.cta-orb {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  filter: blur(60px);
+}
+.cta-orb-1 {
+  width: 300px;
+  height: 300px;
+  background: rgba(37,99,235,0.15);
+  top: -100px;
+  right: -50px;
+  animation: ctaOrbFloat 8s ease-in-out infinite;
+}
+.cta-orb-2 {
+  width: 200px;
+  height: 200px;
+  background: rgba(124,58,237,0.1);
+  bottom: -80px;
+  left: -30px;
+  animation: ctaOrbFloat 10s ease-in-out infinite reverse;
+}
+@keyframes ctaOrbFloat {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(20px, -20px); }
+}
+
+/* Button ripple effect */
+.btn {
+  position: relative;
+  overflow: hidden;
+}
+.btn::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background: radial-gradient(circle, rgba(255,255,255,0.25) 10%, transparent 10%);
+  transform: scale(10);
+  opacity: 0;
+  transition: transform 0.5s, opacity 0.5s;
+  pointer-events: none;
+}
+.btn:active::after {
+  transform: scale(0);
+  opacity: 1;
+  transition: 0s;
+}
+
+/* Cart badge bounce on add */
+@keyframes cartBounce {
+  0% { transform: scale(1); }
+  30% { transform: scale(1.3); }
+  50% { transform: scale(0.9); }
+  70% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+.cart-badge-count.bounce {
+  animation: cartBounce 0.5s ease;
+}
+
+/* Loading skeleton shimmer */
+.skeleton {
+  background: linear-gradient(90deg, var(--bg-alt) 25%, rgba(0,0,0,0.04) 50%, var(--bg-alt) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 8px;
+}
+[data-theme="dark"] .skeleton {
+  background: linear-gradient(90deg, #1e293b 25%, #334155 50%, #1e293b 75%);
+  background-size: 200% 100%;
+}
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+.skeleton-text { height: 1rem; margin-bottom: 0.5rem; }
+.skeleton-title { height: 1.5rem; width: 60%; margin-bottom: 0.75rem; }
+.skeleton-img { height: 200px; width: 100%; }

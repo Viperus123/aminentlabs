@@ -246,7 +246,7 @@ document.addEventListener('DOMContentLoaded', function() {
           observer.unobserve(entry.target);
         }
       });
-    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
 
     fadeEls.forEach(function(el) {
       observer.observe(el);
@@ -609,6 +609,9 @@ function updateCartCount() {
   badges.forEach(function(badge) {
     badge.textContent = total;
     badge.style.display = total > 0 ? 'flex' : 'none';
+    badge.classList.remove('bounce');
+    void badge.offsetWidth;
+    badge.classList.add('bounce');
   });
 }
 
