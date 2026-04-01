@@ -668,7 +668,9 @@ html[data-theme="dark"] .product-card:hover .product-card-img {
   margin: 0;
 }
 .product-card-cart-row .btn-cart {
-  flex: 1;
+  flex: 0 0 auto;
+  padding: 0.5rem 1.25rem;
+  font-size: 0.82rem;
 }
 
 
